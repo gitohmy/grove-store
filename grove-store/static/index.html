@@ -1,0 +1,1661 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grove — Phones, Naturally</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--moss:#3b4a32;--fern:#5a7247;--sage:#8aaa76;--mist:#c8d9bc;--cream:#f4f0e6;--parchment:#ede7d5;--bark:#7a5c3e;--clay:#b5836a;--sky:#a8c5c0;--dusk:#2e3d30;--text:#2a2e22;--muted:#7a806e;--border:#d4cdb8;}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Jost',sans-serif;background:var(--cream);color:var(--text);overflow-x:hidden;}
+
+/* ── PROMO BANNER ── */
+.promo-bar{background:var(--moss);color:var(--cream);text-align:center;padding:.55rem 1rem;font-size:.78rem;font-weight:500;letter-spacing:.06em;position:relative;}
+.promo-bar a{color:var(--sage);text-decoration:underline;cursor:pointer;}
+.promo-close{position:absolute;right:1rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--cream);cursor:pointer;font-size:1rem;opacity:.6;}
+.promo-close:hover{opacity:1;}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:200;background:rgba(244,240,230,0.95);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;padding:1rem 3rem;gap:1rem;}
+.nav-brand{font-family:'Playfair Display',serif;font-size:1.6rem;font-style:italic;color:var(--moss);text-decoration:none;white-space:nowrap;}
+.nav-brand span{color:var(--clay);font-style:normal;}
+.nav-links{display:flex;gap:1.8rem;list-style:none;}
+.nav-links a{font-size:.78rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;cursor:pointer;}
+.nav-links a:hover{color:var(--moss);}
+.nav-search{display:flex;align-items:center;gap:.5rem;background:var(--parchment);border:1px solid var(--border);border-radius:100px;padding:.4rem .9rem;flex:1;max-width:240px;transition:border-color .2s;}
+.nav-search:focus-within{border-color:var(--fern);}
+.nav-search input{background:none;border:none;outline:none;font-family:'Jost',sans-serif;font-size:.82rem;color:var(--text);width:100%;}
+.nav-search input::placeholder{color:var(--muted);}
+.nav-right{display:flex;gap:.6rem;align-items:center;white-space:nowrap;}
+.nav-btn{background:none;border:none;font-family:'Jost',sans-serif;font-size:.78rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;padding:.5rem 1rem;border-radius:100px;transition:all .2s;}
+.nav-btn.primary{background:var(--moss);color:var(--cream);}
+.nav-btn.primary:hover{background:var(--dusk);}
+.nav-btn.ghost{border:1px solid var(--border);color:var(--muted);}
+.nav-btn.ghost:hover{border-color:var(--moss);color:var(--moss);}
+.nav-icon-btn{background:none;border:none;cursor:pointer;font-size:1.1rem;padding:.3rem;position:relative;transition:transform .2s;}
+.nav-icon-btn:hover{transform:scale(1.15);}
+.badge{position:absolute;top:-5px;right:-5px;background:var(--clay);color:#fff;border-radius:50%;width:17px;height:17px;font-size:.58rem;display:flex;align-items:center;justify-content:center;font-weight:700;}
+
+/* search dropdown */
+.search-dropdown{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:0 12px 40px rgba(0,0,0,.1);z-index:300;overflow:hidden;display:none;margin-top:.4rem;}
+.search-wrap{position:relative;}
+.search-item{display:flex;align-items:center;gap:.8rem;padding:.7rem 1.2rem;cursor:pointer;transition:background .15s;}
+.search-item:hover{background:var(--parchment);}
+.search-item-name{font-size:.88rem;font-weight:500;color:var(--text);}
+.search-item-price{font-size:.78rem;color:var(--muted);}
+
+/* ── HERO ── */
+.hero{background:var(--dusk);min-height:90vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:5rem 5rem 4rem;gap:4rem;position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;pointer-events:none;opacity:.05;}
+.hero-eyebrow{font-size:.72rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--sage);margin-bottom:1.2rem;display:flex;align-items:center;gap:.6rem;}
+.hero-eyebrow::before{content:'';width:24px;height:1px;background:var(--sage);display:inline-block;}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(2.8rem,5.5vw,5rem);line-height:1.05;color:var(--cream);margin-bottom:1rem;}
+.hero-title em{color:var(--sage);font-style:italic;}
+.hero-body{font-size:.95rem;font-weight:300;line-height:1.8;color:rgba(244,240,230,.55);max-width:400px;margin-bottom:2rem;}
+.hero-ctas{display:flex;gap:1rem;flex-wrap:wrap;}
+.btn-leaf{background:var(--sage);color:var(--dusk);padding:.85rem 2rem;border-radius:100px;font-family:'Jost',sans-serif;font-size:.85rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;border:none;cursor:pointer;transition:all .25s;}
+.btn-leaf:hover{background:var(--mist);transform:scale(1.03);}
+.btn-outline{background:transparent;color:var(--cream);padding:.85rem 2rem;border-radius:100px;border:1px solid rgba(244,240,230,.25);font-family:'Jost',sans-serif;font-size:.85rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .2s;}
+.btn-outline:hover{border-color:var(--sage);color:var(--sage);}
+.hero-visual{display:flex;justify-content:center;align-items:center;}
+.hero-phone{width:200px;filter:drop-shadow(0 32px 64px rgba(0,0,0,.5));animation:float 5s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
+
+/* ── STRIP ── */
+.strip{background:var(--parchment);display:flex;justify-content:center;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.strip-item{display:flex;align-items:center;gap:.5rem;padding:.9rem 2rem;border-right:1px solid var(--border);font-size:.73rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);}
+.strip-item:last-child{border-right:none;}
+
+/* ── SECTION ── */
+.section{max-width:1180px;margin:0 auto;padding:5rem 2rem;}
+.section-label{font-size:.7rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--fern);margin-bottom:.6rem;display:flex;align-items:center;gap:.5rem;}
+.section-label::before{content:'';width:18px;height:1px;background:var(--fern);display:inline-block;}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:700;color:var(--moss);margin-bottom:.4rem;}
+.section-title em{color:var(--clay);font-style:italic;}
+.section-sub{font-size:.9rem;color:var(--muted);font-weight:300;max-width:440px;line-height:1.7;margin-bottom:2rem;}
+
+/* ── FILTERS ── */
+.filters{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.8rem;align-items:center;}
+.filter-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:.4rem 1.1rem;border-radius:100px;font-family:'Jost',sans-serif;font-size:.76rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:all .2s;}
+.filter-btn:hover,.filter-btn.active{background:var(--moss);border-color:var(--moss);color:var(--cream);}
+.compare-bar{margin-left:auto;display:none;align-items:center;gap:.6rem;}
+.compare-bar.show{display:flex;}
+.compare-bar span{font-size:.78rem;color:var(--muted);}
+.compare-bar button{background:var(--fern);color:#fff;border:none;padding:.4rem 1rem;border-radius:100px;font-size:.76rem;cursor:pointer;}
+
+/* ── PRODUCT GRID ── */
+.products-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6rem;}
+.prod-card{background:#fff;border:1px solid var(--border);border-radius:20px;overflow:hidden;cursor:pointer;transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .3s,border-color .3s;position:relative;}
+.prod-card:hover{transform:translateY(-7px);box-shadow:0 20px 50px rgba(58,74,50,.12);border-color:var(--sage);}
+.prod-img{height:220px;display:flex;align-items:center;justify-content:center;position:relative;background:#fff;overflow:hidden;}
+.prod-img img{max-width:150px;max-height:195px;object-fit:contain;transition:transform .4s cubic-bezier(.34,1.56,.64,1);}
+
+
+
+
+
+
+.prod-emoji{font-size:5.5rem;filter:drop-shadow(0 8px 16px rgba(0,0,0,.1));transition:transform .4s cubic-bezier(.34,1.56,.64,1);}
+.prod-card:hover .prod-img img{transform:scale(1.08) rotate(-2deg);}
+.prod-badge{position:absolute;top:.8rem;left:.8rem;font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:.22rem .6rem;border-radius:100px;}
+.badge-new{background:var(--moss);color:var(--cream);}
+.badge-popular{background:var(--clay);color:#fff;}
+.badge-limited{background:var(--sky);color:var(--dusk);}
+.badge-хит{background:var(--clay);color:#fff;}
+.badge-новинка{background:var(--moss);color:var(--cream);}
+.badge-акция{background:#b5392a;color:#fff;}
+.badge-популярный{background:var(--bark);color:#fff;}
+.prod-actions{position:absolute;top:.7rem;right:.7rem;display:flex;flex-direction:column;gap:.4rem;opacity:0;transition:opacity .2s;}
+.prod-card:hover .prod-actions{opacity:1;}
+.prod-action-btn{width:32px;height:32px;border-radius:50%;background:#fff;border:1px solid var(--border);cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.1);}
+.prod-action-btn:hover{background:var(--moss);color:#fff;border-color:var(--moss);}
+.prod-action-btn.active{background:var(--clay);color:#fff;border-color:var(--clay);}
+.prod-body{padding:1.3rem;}
+.prod-brand{font-size:.62rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--fern);margin-bottom:.25rem;}
+.prod-name{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--moss);margin-bottom:.4rem;}
+.prod-installment{font-size:.72rem;color:var(--bark);margin-bottom:.6rem;font-weight:500;}
+.prod-tags{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.9rem;}
+.prod-tag{font-size:.62rem;color:var(--muted);background:var(--cream);padding:.18rem .5rem;border-radius:6px;border:1px solid var(--border);}
+.swatches{display:flex;gap:4px;margin-bottom:.7rem;}
+.swatch{width:12px;height:12px;border-radius:50%;cursor:pointer;outline:1.5px solid rgba(0,0,0,.12);transition:transform .15s;}
+.swatch:hover{transform:scale(1.25);}
+.swatch.active{outline:2px solid var(--fern);outline-offset:2px;}
+.prod-footer{display:flex;justify-content:space-between;align-items:center;padding-top:.8rem;border-top:1px solid var(--border);}
+.prod-price-main{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;color:var(--moss);}
+.prod-price-old{font-size:.72rem;color:var(--muted);text-decoration:line-through;}
+.add-btn{width:40px;height:40px;border-radius:50%;background:var(--moss);color:var(--cream);border:none;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s;}
+.add-btn:hover{background:var(--fern);transform:scale(1.1) rotate(90deg);}
+.out-stock{font-size:.68rem;color:var(--clay);font-weight:500;}
+.stars{color:#f4a636;font-size:.8rem;letter-spacing:1px;}
+.rating-count{font-size:.7rem;color:var(--muted);margin-left:.2rem;}
+
+/* ── LOADING ── */
+.loading{text-align:center;padding:4rem;color:var(--muted);}
+.spinner{width:28px;height:28px;border:2px solid var(--border);border-top-color:var(--fern);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 1rem;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ── COMPARISON TABLE ── */
+.compare-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:700;display:none;align-items:flex-end;backdrop-filter:blur(4px);}
+.compare-overlay.open{display:flex;}
+.compare-panel{background:var(--cream);width:100%;max-height:80vh;border-radius:24px 24px 0 0;overflow:auto;padding:2rem;}
+.compare-table{width:100%;border-collapse:collapse;margin-top:1.5rem;}
+.compare-table th{font-family:'Playfair Display',serif;font-size:1rem;color:var(--moss);padding:.8rem 1rem;border-bottom:2px solid var(--border);text-align:center;}
+.compare-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--text);text-align:center;vertical-align:middle;}
+.compare-table tr td:first-child{font-weight:500;color:var(--muted);text-align:left;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;}
+.compare-emoji{font-size:2.5rem;display:block;margin:0 auto .4rem;}
+.compare-best{background:rgba(90,114,71,.08);color:var(--fern);font-weight:600;}
+
+/* ── REVIEWS ── */
+.reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;}
+.review-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:1.5rem;}
+.review-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.7rem;}
+.reviewer{display:flex;align-items:center;gap:.7rem;}
+.reviewer-avatar{width:36px;height:36px;border-radius:50%;background:var(--moss);color:var(--cream);display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:700;flex-shrink:0;}
+.reviewer-name{font-weight:500;font-size:.88rem;color:var(--text);}
+.reviewer-date{font-size:.72rem;color:var(--muted);}
+.review-product{font-size:.72rem;color:var(--fern);font-weight:500;margin-bottom:.5rem;}
+.review-text{font-size:.85rem;color:var(--muted);line-height:1.6;}
+.review-verified{font-size:.68rem;color:var(--fern);background:rgba(90,114,71,.08);padding:.15rem .5rem;border-radius:100px;display:inline-block;margin-top:.6rem;}
+
+/* ── FAQ ── */
+.faq-item{border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:.7rem;background:#fff;}
+.faq-q{width:100%;background:none;border:none;text-align:left;padding:1.1rem 1.4rem;font-family:'Jost',sans-serif;font-size:.92rem;font-weight:500;color:var(--text);cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:background .15s;}
+.faq-q:hover{background:var(--parchment);}
+.faq-q .arrow{font-size:.8rem;transition:transform .3s;color:var(--muted);}
+.faq-q.open .arrow{transform:rotate(180deg);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease,padding .3s;}
+.faq-a.open{max-height:200px;padding:.2rem 1.4rem 1.2rem;}
+.faq-a p{font-size:.88rem;color:var(--muted);line-height:1.7;}
+
+/* ── OUR STORY / SUSTAINABILITY ── */
+.dark-section{background:var(--dusk);padding:6rem 2rem;}
+.light-section{background:var(--cream);padding:6rem 2rem;}
+.parchment-section{background:var(--parchment);padding:5rem 2rem;}
+.section-inner{max-width:1180px;margin:0 auto;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;}
+.stat-row{display:flex;gap:2.5rem;flex-wrap:wrap;margin-top:2rem;}
+.stat-item .n{font-family:'Playfair Display',serif;font-size:2.2rem;color:var(--sage);font-weight:700;}
+.stat-item .l{font-size:.72rem;color:rgba(244,240,230,.4);text-transform:uppercase;letter-spacing:.1em;}
+.card-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.dark-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:1.6rem;text-align:center;}
+.dark-card-hl{background:rgba(138,170,118,.1);border:1px solid rgba(138,170,118,.18);}
+.dark-card .icon{font-size:2rem;margin-bottom:.7rem;}
+.dark-card .title{font-family:'Playfair Display',serif;font-size:.92rem;color:var(--cream);margin-bottom:.3rem;}
+.dark-card.dark-card-hl .title{color:var(--sage);}
+.dark-card .body{font-size:.76rem;color:rgba(244,240,230,.4);line-height:1.5;}
+
+.progress-item{margin-bottom:1rem;}
+.progress-label{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);margin-bottom:.35rem;}
+.progress-label span:last-child{color:var(--fern);font-weight:600;}
+.progress-track{background:var(--border);border-radius:100px;height:6px;}
+.progress-fill{height:6px;border-radius:100px;}
+
+.eco-tags{display:flex;flex-wrap:wrap;gap:.5rem;}
+.eco-tag{background:var(--cream);border:1px solid var(--border);padding:.3rem .9rem;border-radius:100px;font-size:.76rem;color:var(--muted);}
+
+/* ── CONTACTS ── */
+.contact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;margin-bottom:1.4rem;}
+.contact-card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:1.8rem;}
+.contact-card .icon{font-size:1.8rem;margin-bottom:.8rem;}
+.contact-card .title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--moss);margin-bottom:.5rem;}
+.contact-card a{color:var(--fern);text-decoration:none;display:block;font-size:.85rem;line-height:2;}
+.contact-card p{font-size:.85rem;color:var(--muted);line-height:1.7;}
+.delivery-card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:1.8rem;}
+
+/* ── FOOTER ── */
+footer{background:var(--dusk);color:rgba(244,240,230,.45);padding:4rem 2rem 2rem;}
+.footer-inner{max-width:1180px;margin:0 auto;}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:2.5rem;}
+.footer-brand{font-family:'Playfair Display',serif;font-size:1.7rem;font-style:italic;color:var(--cream);margin-bottom:.3rem;}
+.footer-brand span{color:var(--sage);}
+.footer-desc{font-size:.82rem;line-height:1.7;margin-bottom:1rem;}
+.footer-col h4{font-size:.68rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--cream);margin-bottom:.9rem;}
+.footer-col a{display:block;font-size:.82rem;color:rgba(244,240,230,.4);text-decoration:none;line-height:2;cursor:pointer;transition:color .2s;}
+.footer-col a:hover{color:var(--sage);}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.07);padding-top:1.5rem;font-size:.72rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem;}
+
+/* ── MODALS ── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.overlay.open{display:flex;}
+.modal{background:var(--cream);border-radius:24px;padding:2.2rem;width:90%;max-width:420px;position:relative;animation:modalIn .3s cubic-bezier(.34,1.56,.64,1);max-height:90vh;overflow-y:auto;}
+.modal-lg{max-width:520px;}
+@keyframes modalIn{from{opacity:0;transform:scale(.92);}to{opacity:1;transform:scale(1);}}
+.modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--muted);line-height:1;z-index:1;}
+.modal h2{font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--moss);margin-bottom:.3rem;}
+.modal-sub{font-size:.83rem;color:var(--muted);margin-bottom:1.4rem;}
+.form-group{margin-bottom:.9rem;}
+.form-group label{display:block;font-size:.72rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.35rem;}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:.7rem .9rem;border:1px solid var(--border);border-radius:10px;font-family:'Jost',sans-serif;font-size:.88rem;background:#fff;color:var(--text);outline:none;transition:border-color .2s;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--fern);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;}
+.form-error{font-size:.76rem;color:var(--clay);margin-top:.3rem;display:none;}
+.modal-btn{width:100%;padding:.82rem;background:var(--moss);color:var(--cream);border:none;border-radius:100px;font-family:'Jost',sans-serif;font-size:.83rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:background .2s;margin-top:.4rem;}
+.modal-btn:hover{background:var(--dusk);}
+.modal-btn.secondary{background:var(--parchment);color:var(--moss);border:1px solid var(--border);}
+.modal-btn.secondary:hover{background:var(--mist);}
+.modal-switch{text-align:center;font-size:.78rem;color:var(--muted);margin-top:.9rem;}
+.modal-switch a{color:var(--fern);cursor:pointer;text-decoration:underline;}
+
+/* ── CART ── */
+.cart-panel{position:fixed;right:0;top:0;height:100%;width:400px;background:var(--cream);z-index:600;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);box-shadow:-8px 0 40px rgba(0,0,0,.1);display:flex;flex-direction:column;}
+.cart-panel.open{transform:translateX(0);}
+.cart-header{padding:1.4rem 1.6rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.cart-header h2{font-family:'Playfair Display',serif;font-size:1.35rem;color:var(--moss);}
+.cart-body{flex:1;overflow-y:auto;padding:1rem 1.6rem;}
+.cart-empty{text-align:center;padding:3rem 1rem;color:var(--muted);}
+.cart-empty .ce-icon{font-size:2.8rem;margin-bottom:.8rem;}
+.cart-item{display:flex;gap:.9rem;padding:.9rem 0;border-bottom:1px solid var(--border);align-items:center;}
+.ci-emoji{font-size:2.5rem;width:54px;height:54px;background:var(--parchment);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ci-info{flex:1;min-width:0;}
+.ci-name{font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700;color:var(--moss);}
+.ci-color{font-size:.7rem;color:var(--muted);}
+.ci-qty{display:flex;align-items:center;gap:.4rem;margin-top:.35rem;}
+.qty-btn{width:22px;height:22px;border-radius:50%;border:1px solid var(--border);background:none;cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.qty-btn:hover{background:var(--moss);color:#fff;border-color:var(--moss);}
+.ci-qty span{font-size:.82rem;font-weight:500;min-width:18px;text-align:center;}
+.ci-price{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;color:var(--moss);flex-shrink:0;}
+.ci-remove{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.9rem;padding:.2rem;transition:color .15s;}
+.ci-remove:hover{color:var(--clay);}
+.cart-footer{padding:1.3rem 1.6rem;border-top:1px solid var(--border);}
+.cart-row{display:flex;justify-content:space-between;font-size:.83rem;color:var(--muted);margin-bottom:.35rem;}
+.cart-row.total{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--moss);margin-top:.5rem;padding-top:.5rem;border-top:1px solid var(--border);}
+.cart-bg{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:599;display:none;}
+
+/* ── ORDER SUCCESS ── */
+.success-icon{font-size:3rem;text-align:center;margin-bottom:.8rem;}
+.order-summary{background:var(--parchment);border-radius:12px;padding:1rem 1.2rem;margin:.8rem 0;}
+.order-row{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);margin-bottom:.25rem;}
+.order-row.bold{color:var(--moss);font-weight:600;}
+
+/* ── WISHLIST PANEL ── */
+.wishlist-panel{position:fixed;right:0;top:0;height:100%;width:360px;background:var(--cream);z-index:600;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);box-shadow:-8px 0 40px rgba(0,0,0,.1);display:flex;flex-direction:column;}
+.wishlist-panel.open{transform:translateX(0);}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(60px);background:var(--moss);color:var(--cream);padding:.75rem 1.6rem;border-radius:100px;font-size:.8rem;font-weight:500;z-index:9999;opacity:0;transition:all .35s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;box-shadow:0 6px 24px rgba(0,0,0,.2);}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.error{background:var(--clay);}
+
+
+/* ── PROFILE PANEL ── */
+.profile-panel{position:fixed;right:0;top:0;height:100%;width:420px;background:var(--cream);z-index:600;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);box-shadow:-8px 0 40px rgba(0,0,0,.1);display:flex;flex-direction:column;overflow-y:auto;}
+.profile-panel.open{transform:translateX(0);}
+.profile-header{background:var(--dusk);padding:2.5rem 1.8rem 2rem;position:relative;}
+.profile-avatar{width:72px;height:72px;border-radius:50%;background:var(--moss);color:var(--cream);font-family:"Playfair Display",serif;font-size:2rem;font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:1rem;border:3px solid rgba(138,170,118,.4);}
+.profile-name{font-family:"Playfair Display",serif;font-size:1.4rem;color:var(--cream);margin-bottom:.2rem;}
+.profile-email{font-size:.78rem;color:rgba(244,240,230,.5);}
+.profile-role{display:inline-block;margin-top:.5rem;font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:.22rem .7rem;border-radius:100px;background:rgba(138,170,118,.2);color:var(--sage);}
+.profile-body{padding:1.5rem 1.8rem;flex:1;}
+.profile-section{margin-bottom:1.8rem;}
+.profile-section-title{font-size:.68rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.9rem;display:flex;align-items:center;gap:.5rem;}
+.profile-section-title::before{content:"";width:14px;height:1px;background:var(--border);display:inline-block;}
+.profile-menu-item{display:flex;align-items:center;gap:.9rem;padding:.85rem 1rem;border-radius:12px;cursor:pointer;transition:background .15s;margin-bottom:.3rem;}
+.profile-menu-item:hover{background:var(--parchment);}
+.profile-menu-icon{font-size:1.1rem;width:28px;text-align:center;}
+.profile-menu-label{font-size:.88rem;font-weight:500;color:var(--text);flex:1;}
+.profile-menu-arrow{color:var(--muted);font-size:.75rem;}
+.order-mini{background:#fff;border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem;margin-bottom:.6rem;}
+.order-mini-top{display:flex;justify-content:space-between;margin-bottom:.3rem;}
+.order-mini-id{font-size:.78rem;font-weight:600;color:var(--moss);}
+.order-mini-status{font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:.18rem .6rem;border-radius:100px;}
+.status-paid{background:rgba(90,114,71,.12);color:var(--fern);}
+.status-pending{background:rgba(181,131,106,.12);color:var(--bark);}
+.status-delivered{background:rgba(58,74,50,.12);color:var(--moss);}
+.order-mini-items{font-size:.78rem;color:var(--muted);}
+.order-mini-total{font-family:"Playfair Display",serif;font-size:.95rem;font-weight:700;color:var(--moss);margin-top:.3rem;}
+.edit-form{background:var(--parchment);border-radius:14px;padding:1.2rem;margin-top:.5rem;display:none;}
+.edit-form.open{display:block;}
+.profile-footer{padding:1.2rem 1.8rem;border-top:1px solid var(--border);}
+.logout-btn{width:100%;padding:.75rem;background:none;border:1px solid var(--border);border-radius:100px;font-family:"Jost",sans-serif;font-size:.82rem;color:var(--muted);cursor:pointer;transition:all .2s;}
+.logout-btn:hover{border-color:var(--clay);color:var(--clay);}
+
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .55s ease,transform .55s ease;}
+.reveal.visible{opacity:1;transform:none;}
+
+/* ── RESPONSIVE ── */
+
+/* ── BURGER ── */
+.burger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:.3rem;}
+.burger span{display:block;width:22px;height:2px;background:var(--moss);border-radius:2px;transition:all .3s;}
+.burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.burger.open span:nth-child(2){opacity:0;}
+.burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+/* Mobile menu drawer */
+.mobile-menu{position:fixed;inset:0;top:0;z-index:199;background:var(--cream);transform:translateY(-100%);transition:transform .35s cubic-bezier(.4,0,.2,1);padding:6rem 2rem 2rem;overflow-y:auto;}
+.mobile-menu.open{transform:translateY(0);}
+.mobile-menu ul{list-style:none;}
+.mobile-menu ul li{border-bottom:1px solid var(--border);}
+.mobile-menu ul li a{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 0;font-size:1.1rem;font-weight:500;color:var(--text);text-decoration:none;cursor:pointer;}
+.mobile-menu ul li a span{color:var(--muted);font-size:.9rem;}
+.mobile-menu-footer{margin-top:2rem;display:flex;flex-direction:column;gap:.8rem;}
+
+@media(max-width:960px){
+  .nav-links{display:none;}
+  .nav-inner{padding:1rem 1.2rem;}
+  .nav-search{max-width:160px;}
+  .burger{display:flex;}
+  .hero{grid-template-columns:1fr;padding:4rem 1.5rem 3rem;text-align:center;}
+  .hero-visual{display:none;}
+  .hero-body{margin:0 auto 1.8rem;}
+  .hero-ctas{justify-content:center;}
+  .products-grid{grid-template-columns:1fr 1fr;}
+  .reviews-grid{grid-template-columns:1fr;}
+  .two-col{grid-template-columns:1fr;gap:2rem;}
+  .contact-grid{grid-template-columns:1fr;}
+  .footer-top{grid-template-columns:1fr 1fr;gap:2rem;}
+  .cart-panel,.wishlist-panel,.profile-panel{width:100%;}
+  .dark-section,.light-section,.parchment-section{padding:3.5rem 1.2rem;}
+  .section{padding:3.5rem 1.2rem;}
+  .compare-panel{padding:1.2rem;}
+  .modal{padding:1.6rem;}
+}
+@media(max-width:560px){
+  .products-grid{grid-template-columns:1fr;}
+  .strip{display:none;}
+  .promo-bar{font-size:.7rem;padding:.5rem .8rem;}
+  .hero-title{font-size:2.4rem;}
+  .hero{padding:3.5rem 1.2rem 2.5rem;}
+  .hero-eyebrow{justify-content:center;}
+  .section-title{font-size:1.7rem;}
+  .filter-btn{font-size:.7rem;padding:.35rem .85rem;}
+  .footer-top{grid-template-columns:1fr;}
+  .reviews-grid{grid-template-columns:1fr;}
+  .card-grid-2{grid-template-columns:1fr;}
+  .stat-row{gap:1.5rem;}
+  .contact-grid{grid-template-columns:1fr;}
+  .nav-search{display:none;}
+  .compare-bar{display:none !important;}
+  .cart-panel,.wishlist-panel,.profile-panel{width:100%;border-radius:0;}
+  .modal{width:95%;padding:1.4rem;}
+  .form-row{grid-template-columns:1fr;}
+}
+
+</style>
+</head>
+<body>
+
+<!-- PROMO BAR -->
+<div class="promo-bar" id="promoBar">
+  🌿 Бесплатная доставка по Казахстану при заказе от 50 000 тг · <a onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">Смотреть телефоны</a>
+  <button class="promo-close" onclick="document.getElementById('promoBar').style.display='none'">✕</button>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-brand">Grove<span>.</span></a>
+    <ul class="nav-links">
+      <li><a onclick="goTo('shop')">Телефоны</a></li>
+      <li><a onclick="goTo('our-story')">О нас</a></li>
+      <li><a onclick="goTo('sustainability')">Экология</a></li>
+      <li><a onclick="goTo('reviews')">Отзывы</a></li>
+      <li><a onclick="goTo('faq')">FAQ</a></li>
+      <li><a onclick="goTo('contacts')">Контакты</a></li>
+    </ul>
+    <div class="search-wrap" style="flex:1;max-width:240px;position:relative;">
+      <div class="nav-search">
+        <span style="color:var(--muted);font-size:.9rem;">🔍</span>
+        <input type="text" id="searchInput" placeholder="Поиск телефонов…" oninput="onSearch(this.value)" onblur="setTimeout(()=>hideSearch(),200)">
+      </div>
+      <div class="search-dropdown" id="searchDropdown"></div>
+    </div>
+    <div class="nav-right">
+      <button class="nav-btn ghost" id="authBtn" onclick="openAuth('login')">Войти</button>
+      <button class="nav-icon-btn" id="profileBtn" onclick="openProfile()" title="Профиль" style="display:none;font-size:1rem;">👤</button>
+      <button class="nav-icon-btn" onclick="openWishlist()" title="Избранное">❤️<span class="badge" id="wishBadge" style="display:none">0</span></button>
+      <button class="nav-icon-btn" onclick="openCart()" title="Корзина">🌿<span class="badge" id="cartCount" style="display:none">0</span></button>
+      <button class="burger" id="burgerBtn" onclick="toggleMobileMenu()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <ul>
+    <li><a onclick="closeMobileMenu();goTo('shop')">Телефоны <span>›</span></a></li>
+    <li><a onclick="closeMobileMenu();goTo('our-story')">О нас <span>›</span></a></li>
+    <li><a onclick="closeMobileMenu();goTo('sustainability')">Экология <span>›</span></a></li>
+    <li><a onclick="closeMobileMenu();goTo('reviews')">Отзывы <span>›</span></a></li>
+    <li><a onclick="closeMobileMenu();goTo('faq')">FAQ <span>›</span></a></li>
+    <li><a onclick="closeMobileMenu();goTo('contacts')">Контакты <span>›</span></a></li>
+  </ul>
+  <div class="mobile-menu-footer">
+    <button class="modal-btn" id="mobileAuthBtn" onclick="closeMobileMenu();openAuth('login')">Войти</button>
+    <button class="modal-btn secondary" onclick="closeMobileMenu();openCart()">🌿 Корзина</button>
+    <button class="modal-btn secondary" onclick="closeMobileMenu();openWishlist()">❤️ Избранное</button>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <svg class="hero-bg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+    <path d="M200,400 Q400,100 700,300 Q1000,500 800,700 Q600,900 200,400Z" fill="#8aaa76"/>
+    <path d="M900,200 Q1100,50 1150,350 Q1200,600 950,550 Q700,500 900,200Z" fill="#5a7247"/>
+    <circle cx="100" cy="150" r="120" fill="#8aaa76"/><circle cx="1100" cy="650" r="90" fill="#5a7247"/>
+  </svg>
+  <div>
+    <div class="hero-eyebrow">Новая коллекция — 2026</div>
+    <h1 class="hero-title">Технологии,<br>рождённые<br><em>природой.</em></h1>
+    <p class="hero-body">Телефоны, созданные с уважением к земле. Натуральные материалы, органичные формы и связь с миром вокруг вас.</p>
+    <div class="hero-ctas">
+      <button class="btn-leaf" onclick="goTo('shop')">Смотреть телефоны</button>
+      <button class="btn-outline" onclick="goTo('sustainability')">Наши материалы</button>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <svg class="hero-phone" viewBox="0 0 220 450" fill="none">
+      <defs>
+        <linearGradient id="hbg" x1="0" y1="0" x2="220" y2="450" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#4a6840"/><stop offset="100%" stop-color="#2e3d30"/></linearGradient>
+        <linearGradient id="hsc" x1="0" y1="0" x2="0" y2="420" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#1a2e1c"/><stop offset="100%" stop-color="#1a2a1c"/></linearGradient>
+        <radialGradient id="hgl" cx="50%" cy="40%" r="45%"><stop offset="0%" stop-color="rgba(138,170,118,0.5)"/><stop offset="100%" stop-color="transparent"/></radialGradient>
+      </defs>
+      <rect width="220" height="450" rx="42" fill="url(#hbg)"/>
+      <rect x="11" y="11" width="198" height="428" rx="32" fill="url(#hsc)"/>
+      <rect x="11" y="11" width="198" height="428" rx="32" fill="url(#hgl)"/>
+      <g opacity=".15"><path d="M80 120 C110 80 160 100 150 160 C140 220 80 200 80 120Z" fill="#8aaa76"/><path d="M80 120 L150 160" stroke="#5a7247" stroke-width="1"/></g>
+      <rect x="35" y="330" width="60" height="40" rx="10" fill="rgba(255,255,255,.06)"/>
+      <rect x="105" y="330" width="60" height="40" rx="10" fill="rgba(255,255,255,.06)"/>
+      <rect x="70" y="30" width="80" height="12" rx="6" fill="rgba(255,255,255,.12)"/>
+      <rect x="78" y="427" width="64" height="3" rx="2" fill="rgba(255,255,255,.18)"/>
+      <rect x="78" y="18" width="64" height="20" rx="10" fill="#1a2e1c"/>
+      <rect x="218" y="120" width="4" height="60" rx="2" fill="#3a5430"/>
+      <rect x="-2" y="105" width="4" height="40" rx="2" fill="#3a5430"/>
+      <rect x="-2" y="155" width="4" height="40" rx="2" fill="#3a5430"/>
+      <g transform="translate(90,140)"><path d="M20 2 C32 12 38 28 20 46 C2 28 8 12 20 2Z" fill="rgba(138,170,118,.35)" stroke="rgba(138,170,118,.6)" stroke-width=".5"/><path d="M20 2 L20 46" stroke="rgba(138,170,118,.4)" stroke-width=".8"/></g>
+    </svg>
+  </div>
+</section>
+
+<!-- STRIP -->
+<div class="strip">
+  <div class="strip-item">🌿 Экологичные материалы</div>
+  <div class="strip-item">📦 Бесплатная доставка от 50 000 тг</div>
+  <div class="strip-item">♻️ Программа возврата</div>
+  <div class="strip-item">🌱 1 дерево с каждого заказа</div>
+  <div class="strip-item">🔒 Гарантия 2 года</div>
+</div>
+
+<!-- PRODUCTS -->
+<div class="section" id="shop">
+  <div class="section-label reveal">Наша коллекция</div>
+  <h2 class="section-title reveal">Телефон для <em>каждого.</em></h2>
+  <p class="section-sub reveal">Создано с любовью к природе и к вам.</p>
+  <div class="filters reveal" id="filterBtns">
+    <button class="filter-btn active" data-cat="">Все</button>
+    <button class="filter-btn" data-cat="flagship">Флагман</button>
+    <button class="filter-btn" data-cat="mid-range">Средний класс</button>
+    <button class="filter-btn" data-cat="budget">Бюджетный</button>
+    <select id="sortSelect" style="margin-left:auto;background:#fff;border:1px solid var(--border);color:var(--muted);padding:.4rem .8rem;border-radius:100px;font-family:'Jost',sans-serif;font-size:.76rem;font-weight:500;cursor:pointer;outline:none;">
+      <option value="popular">Популярные</option>
+      <option value="price_asc">Цена ↑</option>
+      <option value="price_desc">Цена ↓</option>
+      <option value="newest">Новинки</option>
+      <option value="name_asc">По имени</option>
+    </select>
+    <div class="compare-bar" id="compareBar">
+      <span id="compareCount">0 выбрано</span>
+      <button onclick="openCompare()" style="cursor:pointer;">Сравнить →</button>
+      <button onclick="clearCompare()" style="background:var(--muted);">✕</button>
+    </div>
+  </div>
+  <div class="products-grid" id="productsGrid">
+    <div class="loading"><div class="spinner"></div>Загрузка…</div>
+  </div>
+</div>
+
+<!-- REVIEWS -->
+<div class="parchment-section" id="reviews">
+  <div class="section-inner">
+    <div class="section-label reveal">Отзывы</div>
+    <h2 class="section-title reveal">Что говорят <em>покупатели.</em></h2>
+    <p class="section-sub reveal">Реальные люди, реальные впечатления.</p>
+    <div class="reviews-grid reveal">
+      <div class="review-card">
+        <div class="review-header">
+          <div class="reviewer">
+            <div class="reviewer-avatar">А</div>
+            <div><div class="reviewer-name">Айгерим М.</div><div class="reviewer-date">15 февраля 2026</div></div>
+          </div>
+          <div class="stars">★★★★★</div>
+        </div>
+        <div class="review-product">Forest Pro</div>
+        <div class="review-text">Просто влюбилась в этот телефон! Бамбуковая рамка такая приятная на ощупь, а камера снимает невероятно. Уже посоветовала всем подругам 🌿</div>
+        <div class="review-verified">✓ Verified purchase</div>
+      </div>
+      <div class="review-card">
+        <div class="review-header">
+          <div class="reviewer">
+            <div class="reviewer-avatar" style="background:var(--bark);">Д</div>
+            <div><div class="reviewer-name">Данияр С.</div><div class="reviewer-date">3 января 2026</div></div>
+          </div>
+          <div class="stars">★★★★★</div>
+        </div>
+        <div class="review-product">Terra</div>
+        <div class="review-text">Взял Terra вместо нового iPhone — ни разу не пожалел. Батарея держит двое суток, экран яркий, и приятно знать что телефон сделан экологично.</div>
+        <div class="review-verified">✓ Verified purchase</div>
+      </div>
+      <div class="review-card">
+        <div class="review-header">
+          <div class="reviewer">
+            <div class="reviewer-avatar" style="background:var(--sky);color:var(--dusk);">З</div>
+            <div><div class="reviewer-name">Зарина К.</div><div class="reviewer-date">20 января 2026</div></div>
+          </div>
+          <div class="stars">★★★★☆</div>
+        </div>
+        <div class="review-product">Amber SE</div>
+        <div class="review-text">Хороший телефон за свои деньги. Быстрая доставка, красивая экоупаковка. Единственное — хотелось бы чуть лучше фронталку, но в целом очень довольна!</div>
+        <div class="review-verified">✓ Verified purchase</div>
+      </div>
+      <div class="review-card">
+        <div class="review-header">
+          <div class="reviewer">
+            <div class="reviewer-avatar" style="background:var(--fern);">Т</div>
+            <div><div class="reviewer-name">Тимур Н.</div><div class="reviewer-date">8 февраля 2026</div></div>
+          </div>
+          <div class="stars">★★★★★</div>
+        </div>
+        <div class="review-product">Mist Ultra</div>
+        <div class="review-text">Mist Ultra — шедевр! Зум 5× позволяет снимать горы в Алматы с потрясающими деталями. Статусный телефон с экологичной миссией.</div>
+        <div class="review-verified">✓ Verified purchase</div>
+      </div>
+      <div class="review-card">
+        <div class="review-header">
+          <div class="reviewer">
+            <div class="reviewer-avatar" style="background:var(--clay);">С</div>
+            <div><div class="reviewer-name">Сабина А.</div><div class="reviewer-date">25 января 2026</div></div>
+          </div>
+          <div class="stars">★★★★★</div>
+        </div>
+        <div class="review-product">Canopy</div>
+        <div class="review-text">Отличный выбор за средние деньги. OLED экран — красивый, батарея 5200mAh — живёт долго. Цвет Canopy вживую ещё красивее чем на сайте!</div>
+        <div class="review-verified">✓ Verified purchase</div>
+      </div>
+      <div class="review-card">
+        <div class="review-header">
+          <div class="reviewer">
+            <div class="reviewer-avatar" style="background:#888;">Е</div>
+            <div><div class="reviewer-name">Ерлан Б.</div><div class="reviewer-date">12 февраля 2026</div></div>
+          </div>
+          <div class="stars">★★★★☆</div>
+        </div>
+        <div class="review-product">Dusk Mini</div>
+        <div class="review-text">Идеальный компактный телефон. Помещается в любой карман, работает шустро. Батарея немного меньше чем у старшей линейки, но для моих задач хватает.</div>
+        <div class="review-verified">✓ Verified purchase</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- OUR STORY -->
+<div class="dark-section" id="our-story">
+  <div class="section-inner">
+    <div class="two-col">
+      <div>
+        <div style="font-size:.7rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--sage);margin-bottom:.9rem;display:flex;align-items:center;gap:.5rem;"><span style="width:20px;height:1px;background:var(--sage);display:inline-block;"></span>Наша история</div>
+        <h2 style="font-family:'Playfair Display',serif;font-size:clamp(2rem,3.5vw,3rem);color:var(--cream);line-height:1.1;margin-bottom:1.1rem;">Рождены в <em style="color:var(--sage);font-style:italic;">Казахстане.</em></h2>
+        <p style="font-size:.92rem;color:rgba(244,240,230,.55);font-weight:300;line-height:1.8;margin-bottom:1rem;">Мы основали Grove в 2019 году в Алматы, у подножия Заилийского Алатау. Горы каждый день напоминают нам зачем мы работаем — технологии не должны разрушать природу.</p>
+        <p style="font-size:.92rem;color:rgba(244,240,230,.55);font-weight:300;line-height:1.8;margin-bottom:1.8rem;">Каждый телефон Grove — это бамбук, пробка и переработанный алюминий. Мы верим: красивые вещи могут быть и ответственными.</p>
+        <div class="stat-row">
+          <div class="stat-item"><div class="n">2019</div><div class="l">Основана</div></div>
+          <div class="stat-item"><div class="n">50К+</div><div class="l">Клиентов</div></div>
+          <div class="stat-item"><div class="n">6</div><div class="l">Моделей</div></div>
+          <div class="stat-item"><div class="n">🇰🇿</div><div class="l">Казахстан</div></div>
+        </div>
+      </div>
+      <div class="card-grid-2">
+        <div class="dark-card"><div class="icon">🌿</div><div class="title">Натуральные материалы</div><div class="body">Бамбук, пробка и сертифицированный металл в каждом устройстве</div></div>
+        <div class="dark-card" style="margin-top:1.5rem;"><div class="icon">🏔️</div><div class="title">Дух гор</div><div class="body">Вдохновлены красотой природы Казахстана каждый день</div></div>
+        <div class="dark-card"><div class="icon">🤝</div><div class="title">Честный бизнес</div><div class="body">Прозрачная цепочка поставок без компромиссов</div></div>
+        <div class="dark-card dark-card-hl" style="margin-top:1.5rem;"><div class="icon">❤️</div><div class="title">С любовью к земле</div><div class="body">Каждый заказ = одно посаженное дерево в Казахстане</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUSTAINABILITY -->
+<div class="light-section" id="sustainability">
+  <div class="section-inner">
+    <div class="section-label reveal">Экология</div>
+    <h2 class="section-title reveal">Sustainability — <em>наш приоритет.</em></h2>
+    <p class="section-sub reveal">Мы несём ответственность перед планетой. Вот что делаем прямо сейчас.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem;margin-bottom:1.5rem;" class="reveal">
+      <div style="background:#fff;border:1px solid var(--border);border-radius:18px;padding:1.7rem;">
+        <div style="font-size:2rem;margin-bottom:.8rem;">🌳</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--moss);margin-bottom:.4rem;">50 000 деревьев</div>
+        <div style="font-size:.83rem;color:var(--muted);line-height:1.6;">С 2019 года вместе с фондом «Жасыл Ел» посадили более 50 тысяч деревьев по всему Казахстану.</div>
+      </div>
+      <div style="background:#fff;border:1px solid var(--border);border-radius:18px;padding:1.7rem;">
+        <div style="font-size:2rem;margin-bottom:.8rem;">♻️</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--moss);margin-bottom:.4rem;">Программа возврата</div>
+        <div style="font-size:.83rem;color:var(--muted);line-height:1.6;">Сдайте старый телефон при доставке нового — мы переработаем его без вреда для природы.</div>
+      </div>
+      <div style="background:#fff;border:1px solid var(--border);border-radius:18px;padding:1.7rem;">
+        <div style="font-size:2rem;margin-bottom:.8rem;">📦</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--moss);margin-bottom:.4rem;">Эко-упаковка</div>
+        <div style="font-size:.83rem;color:var(--muted);line-height:1.6;">100% переработанный картон и соевые чернила. Никакого пластика в каждой коробке Grove.</div>
+      </div>
+      <div style="background:#fff;border:1px solid var(--border);border-radius:18px;padding:1.7rem;">
+        <div style="font-size:2rem;margin-bottom:.8rem;">☀️</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--moss);margin-bottom:.4rem;">Солнечная энергия</div>
+        <div style="font-size:.83rem;color:var(--muted);line-height:1.6;">Наш офис и склад в Алматы работают на 100% солнечной энергии с 2023 года.</div>
+      </div>
+      <div style="background:#fff;border:1px solid var(--border);border-radius:18px;padding:1.7rem;">
+        <div style="font-size:2rem;margin-bottom:.8rem;">🌍</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--moss);margin-bottom:.4rem;">Нейтральный след</div>
+        <div style="font-size:.83rem;color:var(--muted);line-height:1.6;">К 2027 году обязуемся достичь нулевого углеродного следа по всей цепочке поставок.</div>
+      </div>
+      <div style="background:var(--moss);border-radius:18px;padding:1.7rem;color:var(--cream);">
+        <div style="font-size:2rem;margin-bottom:.8rem;">🎯</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;margin-bottom:.4rem;">Цель 2030</div>
+        <div style="font-size:.83rem;color:rgba(244,240,230,.65);line-height:1.6;">Стать первой полностью безотходной компанией по производству телефонов в Центральной Азии.</div>
+      </div>
+    </div>
+    <div style="background:#fff;border:1px solid var(--border);border-radius:18px;padding:1.8rem;" class="reveal">
+      <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--moss);margin-bottom:1.3rem;">Прогресс наших целей</div>
+      <div class="progress-item"><div class="progress-label"><span>Переработанные материалы в корпусе</span><span>78%</span></div><div class="progress-track"><div class="progress-fill" style="background:var(--fern);width:78%;"></div></div></div>
+      <div class="progress-item"><div class="progress-label"><span>Углеродная нейтральность (план к 2027)</span><span>54%</span></div><div class="progress-track"><div class="progress-fill" style="background:var(--sage);width:54%;"></div></div></div>
+      <div class="progress-item"><div class="progress-label"><span>Эко-упаковка по всей линейке</span><span>100%</span></div><div class="progress-track"><div class="progress-fill" style="background:var(--moss);width:100%;"></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<div class="parchment-section" id="faq">
+  <div class="section-inner">
+    <div class="section-label reveal">Вопросы и ответы</div>
+    <h2 class="section-title reveal">Часто <em>спрашивают.</em></h2>
+    <p class="section-sub reveal">Если не нашли ответ — пишите нам напрямую.</p>
+    <div style="max-width:720px;" class="reveal">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Как быстро доставят мой заказ? <span class="arrow">▼</span></button>
+        <div class="faq-a"><p>По Алматы доставляем на следующий день. В Астану, Шымкент и Карагандf — 2 рабочих дня. По всему Казахстану — до 5 дней. Доставка бесплатная при заказе от 50 000 тг, при меньшей сумме — 1 500 тг.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Можно ли вернуть телефон? <span class="arrow">▼</span></button>
+        <div class="faq-a"><p>Да! Вы можете вернуть устройство в течение 14 дней с момента получения, если оно не было в использовании и сохранена оригинальная упаковка. Возврат денег — в течение 3 рабочих дней.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Какая гарантия на телефоны Grove? <span class="arrow">▼</span></button>
+        <div class="faq-a"><p>Все телефоны Grove поставляются с официальной гарантией 2 года. Гарантия покрывает производственные дефекты. Механические повреждения и попадание воды в гарантию не входят.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Есть ли рассрочка или кредит? <span class="arrow">▼</span></button>
+        <div class="faq-a"><p>Да! Мы предлагаем рассрочку 0% через Kaspi Bank на 3, 6 и 12 месяцев. При оформлении заказа выберите оплату через Kaspi — вас перенаправят на их платёжную страницу.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Телефоны оригинальные? Есть ли документы? <span class="arrow">▼</span></button>
+        <div class="faq-a"><p>Все устройства 100% оригинальные, с официальным ввозом на территорию Казахстана. К каждому телефону прилагается: гарантийный талон, товарный чек и сертификат соответствия ГОСТ.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Как работает программа возврата старого телефона? <span class="arrow">▼</span></button>
+        <div class="faq-a"><p>При покупке нового телефона Grove вы можете сдать старый смартфон любой марки. Мы оцениваем его стоимость и даём скидку на новый телефон. Старое устройство мы перерабатываем экологично.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Можно ли сравнить несколько телефонов? <span class="arrow">▼</span></button>
+        <div class="faq-a"><p>Да! В каталоге нажмите кнопку «⚖» на карточке любого телефона (появляется при наведении) — можно выбрать до 3 телефонов и сравнить их характеристики в таблице.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACTS -->
+<div class="parchment-section" id="contacts" style="background:var(--parchment);">
+  <div class="section-inner">
+    <div class="section-label reveal">Свяжитесь с нами</div>
+    <h2 class="section-title reveal">Мы в <em>Казахстане.</em></h2>
+    <p class="section-sub reveal">Работаем по всей стране. Звоните, пишите — всегда на связи.</p>
+    <div class="contact-grid reveal">
+      <div class="contact-card">
+        <div class="icon">📍</div>
+        <div class="title">Адрес</div>
+        <p>Казахстан, г. Алматы<br>пр. Достык, 5<br>БЦ «Нурлы Тау», офис 412<br>050000</p>
+      </div>
+      <div class="contact-card">
+        <div class="icon">📞</div>
+        <div class="title">Телефон и WhatsApp</div>
+        <a href="tel:+77001234567">+7 (700) 123-45-67</a>
+        <a href="tel:+77271234567">+7 (727) 123-45-67</a>
+        <p style="margin-top:.5rem;">Пн–Пт: 9:00 — 18:00<br>Сб: 10:00 — 16:00</p>
+      </div>
+      <div class="contact-card">
+        <div class="icon">✉️</div>
+        <div class="title">Email и соцсети</div>
+        <a href="mailto:info@grove.kz">info@grove.kz</a>
+        <a href="mailto:support@grove.kz">support@grove.kz</a>
+        <a href="#">Instagram: @grove.kz</a>
+        <a href="#">Telegram: @grovekz</a>
+      </div>
+    </div>
+    <div class="delivery-card reveal">
+      <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--moss);margin-bottom:1rem;">🚚 Доставка по Казахстану</div>
+      <div class="eco-tags">
+        <span class="eco-tag">Алматы — 1 день</span>
+        <span class="eco-tag">Астана — 2 дня</span>
+        <span class="eco-tag">Шымкент — 2 дня</span>
+        <span class="eco-tag">Караганда — 2 дня</span>
+        <span class="eco-tag">Актобе — 3 дня</span>
+        <span class="eco-tag">Усть-Каменогорск — 3 дня</span>
+        <span class="eco-tag">Тараз — 3 дня</span>
+        <span class="eco-tag">Все города КЗ — до 5 дней</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand">Grove<span>.</span></div>
+        <p class="footer-desc">Телефоны, созданные с уважением к природе. Казахстан 🇰🇿</p>
+        <div style="display:flex;gap:.6rem;margin-top:.5rem;">
+          <a href="#" style="color:var(--sage);font-size:1.2rem;text-decoration:none;">📸</a>
+          <a href="#" style="color:var(--sage);font-size:1.2rem;text-decoration:none;">✈️</a>
+          <a href="#" style="color:var(--sage);font-size:1.2rem;text-decoration:none;">💼</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Магазин</h4>
+        <a onclick="goTo('shop')">Все телефоны</a>
+        <a onclick="goTo('shop');setFilter('flagship')">Флагманы</a>
+        <a onclick="goTo('shop');setFilter('mid-range')">Средний класс</a>
+        <a onclick="goTo('shop');setFilter('budget')">Бюджетные</a>
+        <a onclick="openWishlist()">Избранное</a>
+      </div>
+      <div class="footer-col">
+        <h4>Компания</h4>
+        <a onclick="goTo('our-story')">О нас</a>
+        <a onclick="goTo('sustainability')">Экология</a>
+        <a onclick="goTo('reviews')">Отзывы</a>
+        <a onclick="goTo('faq')">FAQ</a>
+        <a onclick="goTo('contacts')">Контакты</a>
+      </div>
+      <div class="footer-col">
+        <h4>Помощь</h4>
+        <a onclick="goTo('faq')">Доставка</a>
+        <a onclick="goTo('faq')">Возврат</a>
+        <a onclick="goTo('faq')">Гарантия</a>
+        <a onclick="goTo('faq')">Рассрочка</a>
+        <a href="mailto:support@grove.kz">Поддержка</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Grove Technologies Kazakhstan · ТОО «Гроув» · БИН 123456789012</span>
+      <span>Политика конфиденциальности · Условия использования</span>
+    </div>
+  </div>
+</footer>
+
+<!-- AUTH MODAL -->
+<div class="overlay" id="authOverlay" onclick="if(event.target===this)closeAuth()">
+  <div class="modal"><button class="modal-close" onclick="closeAuth()">✕</button><div id="authContent"></div></div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="overlay" id="checkoutOverlay" onclick="if(event.target===this)closeCheckout()">
+  <div class="modal modal-lg"><button class="modal-close" onclick="closeCheckout()">✕</button><div id="checkoutContent"></div></div>
+</div>
+
+<!-- COMPARE OVERLAY -->
+<div class="compare-overlay" id="compareOverlay" onclick="if(event.target===this)closeCompare()">
+  <div class="compare-panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--moss);">Сравнение телефонов</h2>
+      <button onclick="closeCompare()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--muted);">✕</button>
+    </div>
+    <div id="compareContent"></div>
+  </div>
+</div>
+
+<!-- CART PANEL -->
+<div class="cart-panel" id="cartPanel">
+  <div class="cart-header"><h2>Корзина</h2><button class="modal-close" style="position:static" onclick="closeCart()">✕</button></div>
+  <div class="cart-body" id="cartBody"></div>
+  <div class="cart-footer" id="cartFooter"></div>
+</div>
+<div class="cart-bg" id="cartBg" onclick="closeAllPanels()"></div>
+
+<!-- WISHLIST PANEL -->
+<div class="wishlist-panel" id="wishlistPanel">
+  <div class="cart-header"><h2>❤️ Избранное</h2><button class="modal-close" style="position:static" onclick="closeWishlist()">✕</button></div>
+  <div class="cart-body" id="wishlistBody"></div>
+  <div class="cart-footer" id="wishlistFooter"></div>
+</div>
+
+
+<!-- PROFILE PANEL -->
+<div class="profile-panel" id="profilePanel">
+  <div class="profile-header">
+    <button class="modal-close" style="position:absolute;top:1rem;right:1rem;color:rgba(244,240,230,.5);" onclick="closeProfile()">✕</button>
+    <div class="profile-avatar" id="profileAvatar">?</div>
+    <div class="profile-name" id="profileName">—</div>
+    <div class="profile-email" id="profileEmailDisp">—</div>
+    <span class="profile-role" id="profileRole">customer</span>
+  </div>
+  <div class="profile-body">
+
+    <!-- Quick stats -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem;margin-bottom:1.8rem;" id="profileStats">
+      <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:.8rem;text-align:center;">
+        <div style="font-family:Playfair Display,serif;font-size:1.4rem;font-weight:700;color:var(--moss);" id="statOrders">—</div>
+        <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Заказов</div>
+      </div>
+      <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:.8rem;text-align:center;">
+        <div style="font-family:Playfair Display,serif;font-size:1.4rem;font-weight:700;color:var(--moss);" id="statWish">—</div>
+        <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Избранное</div>
+      </div>
+      <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:.8rem;text-align:center;">
+        <div style="font-family:Playfair Display,serif;font-size:1.4rem;font-weight:700;color:var(--moss);" id="statCart">—</div>
+        <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">В корзине</div>
+      </div>
+    </div>
+
+    <!-- Orders -->
+    <div class="profile-section">
+      <div class="profile-section-title">Мои заказы</div>
+      <div id="profileOrders"><div class="loading" style="padding:1rem;"><div class="spinner"></div></div></div>
+      <div style="text-align:center;margin-top:.5rem;">
+        <button onclick="openAllOrders()" style="background:none;border:1px solid var(--sage);color:var(--moss);padding:.4rem 1rem;border-radius:20px;font-size:.78rem;cursor:pointer;">Все заказы →</button>
+      </div>
+    </div>
+
+    <!-- Edit profile -->
+    <div class="profile-section">
+      <div class="profile-section-title">Данные аккаунта</div>
+      <div class="profile-menu-item" onclick="toggleEditForm()">
+        <span class="profile-menu-icon">✏️</span>
+        <span class="profile-menu-label">Изменить имя</span>
+        <span class="profile-menu-arrow">›</span>
+      </div>
+      <div class="edit-form" id="editNameForm">
+        <div class="form-group"><label>Новое имя</label><input id="editNameInput" placeholder="Ваше имя"/></div>
+        <button class="modal-btn" style="margin-top:.3rem" onclick="saveName()">Сохранить</button>
+      </div>
+      <div class="profile-menu-item" onclick="togglePassForm()">
+        <span class="profile-menu-icon">🔒</span>
+        <span class="profile-menu-label">Изменить пароль</span>
+        <span class="profile-menu-arrow">›</span>
+      </div>
+      <div class="edit-form" id="editPassForm">
+        <div class="form-group"><label>Текущий пароль</label><input id="curPass" type="password"/></div>
+        <div class="form-group"><label>Новый пароль</label><input id="newPass" type="password"/></div>
+        <div class="form-error" id="passErr"></div>
+        <button class="modal-btn" style="margin-top:.3rem" onclick="savePass()">Сохранить</button>
+      </div>
+    </div>
+
+    <!-- Wishlist shortcut -->
+    <div class="profile-section">
+      <div class="profile-section-title">Быстрые ссылки</div>
+      <div class="profile-menu-item" onclick="closeProfile();openWishlist()">
+        <span class="profile-menu-icon">❤️</span>
+        <span class="profile-menu-label">Избранное</span>
+        <span class="profile-menu-arrow">›</span>
+      </div>
+      <div class="profile-menu-item" onclick="closeProfile();openCart()">
+        <span class="profile-menu-icon">🛍</span>
+        <span class="profile-menu-label">Корзина</span>
+        <span class="profile-menu-arrow">›</span>
+      </div>
+      <div class="profile-menu-item" onclick="closeProfile();goTo('contacts')">
+        <span class="profile-menu-icon">💬</span>
+        <span class="profile-menu-label">Поддержка</span>
+        <span class="profile-menu-arrow">›</span>
+      </div>
+    </div>
+
+  </div>
+  <div class="profile-footer">
+    <button class="logout-btn" onclick="logout();closeProfile()">Выйти из аккаунта</button>
+  </div>
+</div>
+
+<!-- All Orders Panel -->
+<div id="ordersPanel" style="position:fixed;top:0;right:-100%;width:min(420px,100vw);height:100vh;background:var(--cream);z-index:1100;overflow-y:auto;transition:right .35s cubic-bezier(.4,0,.2,1);box-shadow:-4px 0 24px rgba(0,0,0,.12);">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:1.2rem 1.2rem .8rem;border-bottom:1px solid var(--border);background:#fff;position:sticky;top:0;z-index:10;">
+    <div style="display:flex;align-items:center;gap:.6rem;">
+      <button onclick="closeAllOrders()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--muted);">‹</button>
+      <span style="font-family:Playfair Display,serif;font-size:1.1rem;font-weight:700;color:var(--moss);">Мои заказы</span>
+    </div>
+  </div>
+  <div id="allOrdersList" style="padding:1rem;"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API = window.location.origin + '/api';
+
+// ── State ───────────────────────────────────────────────────────────────
+let token       = localStorage.getItem('grove_token');
+let currentUser = JSON.parse(localStorage.getItem('grove_user') || 'null');
+let cart        = {items:[],subtotal:0,item_count:0};
+let wishlist    = JSON.parse(localStorage.getItem('grove_wish') || '[]'); // product ids
+let compareList = []; // product objects, max 3
+let allProducts = [];
+
+// ── Helpers ─────────────────────────────────────────────────────────────
+function goTo(id){ document.getElementById(id)?.scrollIntoView({behavior:'smooth'}); }
+
+function setFilter(cat){
+  setTimeout(()=>{
+    document.querySelectorAll('.filter-btn').forEach(b=>{
+      b.classList.toggle('active', b.dataset.cat===cat);
+    });
+    loadProducts(cat);
+  }, 400);
+}
+
+function closeAllPanels(){
+  document.getElementById('cartPanel').classList.remove('open');
+  document.getElementById('wishlistPanel').classList.remove('open');
+  document.getElementById('profilePanel').classList.remove('open');
+  document.getElementById('ordersPanel').style.right = '-100%';
+  document.getElementById('cartBg').style.display = 'none';
+}
+
+async function apiCall(path, options={}) {
+  const headers = {'Content-Type':'application/json'};
+  if(token) headers['Authorization'] = `Bearer ${token}`;
+  const res = await fetch(API+path, {...options, headers:{...headers,...(options.headers||{})}});
+  const data = await res.json();
+  if(!res.ok) throw new Error(data.error || 'Ошибка сервера');
+  return data;
+}
+
+const PHONE_IMAGES = {"iphone-17-pro-blue": "/static/images/iphone-17-pro-blue.svg", "iphone-17-pro-max": "/static/images/iphone-17-pro-max.svg", "iphone-17-black": "/static/images/iphone-17-black.svg", "iphone-16e": "/static/images/iphone-16e.svg", "samsung-s25-ultra": "/static/images/samsung-s25-ultra.svg", "samsung-s25-plus": "/static/images/samsung-s25-plus.svg", "samsung-s25": "/static/images/samsung-s25.svg", "samsung-z-flip7": "/static/images/samsung-z-flip7.svg", "samsung-a56": "/static/images/samsung-a56.svg", "samsung-a36": "/static/images/samsung-a36.svg", "samsung-a26": "/static/images/samsung-a26.svg", "redmi-note14-proplus": "/static/images/redmi-note14-proplus.svg", "redmi-note14": "/static/images/redmi-note14.svg", "oppo-reno14f": "/static/images/oppo-reno14f.svg", "vivo-v60": "/static/images/vivo-v60.svg", "vivo-v50-lite": "/static/images/vivo-v50-lite.svg", "honor-magic7": "/static/images/honor-magic7.svg", "motorola-edge60": "/static/images/motorola-edge60.svg", "samsung-a17": "/static/images/samsung-a17.svg", "samsung-a16": "/static/images/samsung-a16.svg", "samsung-a07": "/static/images/samsung-a07.svg", "xiaomi-redmi-a5": "/static/images/xiaomi-redmi-a5.svg", "vivo-y29": "/static/images/vivo-y29.svg", "tecno-spark20": "/static/images/tecno-spark20.svg", "infinix-hot40i": "/static/images/infinix-hot40i.svg", "oppo-a5-pro": "/static/images/oppo-a5-pro.svg"};
+const BRAND_BG = {'Apple':'#1d1d1f','Samsung':'#1428a0','Xiaomi':'#ff6900','OPPO':'#1a1a2e','Vivo':'#415fff','TECNO':'#00a0e9','Motorola':'#5d2d91','HONOR':'#c8392b','Infinix':'#e60012'};
+function getEmoji(i){ return '📱'; }
+function getPhoneImg(slug, brand, name) {
+  const url = PHONE_IMAGES[slug];
+  if(url) return `<img src="${url}" alt="${name}" style="width:130px;height:195px;object-fit:contain;filter:drop-shadow(0 6px 18px rgba(0,0,0,.18));transition:transform .4s cubic-bezier(.34,1.56,.64,1);">`;
+  return `<div style="font-size:5rem;filter:drop-shadow(0 8px 16px rgba(0,0,0,.1));">📱</div>`;
+}
+function stars(n=5){ return '★'.repeat(n)+'☆'.repeat(5-n); }
+
+function showToast(msg, isErr=false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (isErr?' error':'');
+  clearTimeout(t._t);
+  t._t = setTimeout(()=> t.className='toast', 2800);
+}
+
+// ── Reveal ───────────────────────────────────────────────────────────────
+function observeReveal(){
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting) e.target.classList.add('visible');});
+  },{threshold:0.08});
+  document.querySelectorAll('.reveal:not(.visible)').forEach(el=>obs.observe(el));
+}
+
+// ── Auth UI ──────────────────────────────────────────────────────────────
+function updateAuthUI(){
+  const btn = document.getElementById('authBtn');
+  const profileBtn = document.getElementById('profileBtn');
+  if(currentUser){
+    btn.style.display = 'none';
+    profileBtn.style.display = 'flex';
+  } else {
+    btn.style.display = '';
+    profileBtn.style.display = 'none';
+  }
+  updateMobileMenu();
+}
+function logout(){
+  token=null; currentUser=null;
+  localStorage.removeItem('grove_token'); localStorage.removeItem('grove_user');
+  cart={items:[],subtotal:0,item_count:0};
+  updateAuthUI(); updateCartBadge();
+  showToast('👋 Вы вышли из аккаунта');
+}
+
+// ── Auth modal ───────────────────────────────────────────────────────────
+function openAuth(mode){ document.getElementById('authOverlay').classList.add('open'); renderAuthForm(mode); }
+function closeAuth(){ document.getElementById('authOverlay').classList.remove('open'); }
+
+function renderAuthForm(mode){
+  const isLogin = mode==='login';
+  document.getElementById('authContent').innerHTML = `
+    <h2>${isLogin ? 'Добро пожаловать' : 'Создать аккаунт'}</h2>
+    <p class="modal-sub">${isLogin ? 'Войдите в ваш аккаунт Grove.' : 'Присоединяйтесь к Grove.'}</p>
+    ${!isLogin?`<div class="form-group"><label>Имя</label><input id="aName" placeholder="Ваше имя"/></div>`:''}
+    <div class="form-group"><label>Email</label><input id="aEmail" type="email" placeholder="you@example.com"/></div>
+    <div class="form-group"><label>Пароль</label><input id="aPass" type="password" placeholder="Минимум 8 символов"/>
+      <div class="form-error" id="aErr"></div></div>
+    <button class="modal-btn" onclick="submitAuth('${mode}')">${isLogin ? 'Войти' : 'Зарегистрироваться'}</button>
+    <p class="modal-switch">${isLogin
+      ? `Нет аккаунта? <a onclick="renderAuthForm('register')">Создать</a>`
+      : `Уже есть аккаунт? <a onclick="renderAuthForm('login')">Войти</a>`}</p>
+    ${isLogin?`<p class="modal-switch" style="margin-top:.4rem"><a onclick="fillDemo()" style="color:var(--clay)">→ Тестовый аккаунт</a></p>`:''}
+  `;
+}
+function fillDemo(){ document.getElementById('aEmail').value='demo@grove.com'; document.getElementById('aPass').value='demo1234'; }
+
+async function submitAuth(mode){
+  const email=document.getElementById('aEmail').value.trim();
+  const pass=document.getElementById('aPass').value;
+  const name=document.getElementById('aName')?.value.trim();
+  const errEl=document.getElementById('aErr');
+  errEl.style.display='none';
+  try{
+    if(mode==='register') await apiCall('/auth/register',{method:'POST',body:JSON.stringify({email,password:pass,full_name:name})});
+    const d = await apiCall('/auth/login',{method:'POST',body:JSON.stringify({email,password:pass})});
+    token=d.access_token; currentUser=d.user;
+    localStorage.setItem('grove_token',token); localStorage.setItem('grove_user',JSON.stringify(currentUser));
+    updateAuthUI(); await loadCart(); closeAuth();
+    showToast(`🌿 Привет, ${currentUser.full_name?.split(' ')[0] || currentUser.email.split('@')[0]}!`);
+  }catch(e){ errEl.textContent='Ошибка: ' + (e.message||'попробуйте ещё раз'); errEl.style.display='block'; console.error(e); }
+}
+
+// ── Products ─────────────────────────────────────────────────────────────
+let currentCat = '';
+async function loadProducts(cat=''){
+  currentCat = cat;
+  const sort = document.getElementById('sortSelect')?.value || 'popular';
+  const grid=document.getElementById('productsGrid');
+  grid.innerHTML='<div class="loading"><div class="spinner"></div>Загрузка…</div>';
+  try{
+    const q=new URLSearchParams({per_page:50});
+    if(cat) q.set('category',cat);
+    q.set('sort', sort);
+    const d = await apiCall(`/products?${q}`);
+    allProducts = d.items;
+    renderProducts(allProducts);
+  }catch(e){
+    grid.innerHTML=`<div class="loading">⚠️ Сервер недоступен. Запустите python3 server.py<br><small>${e.message}</small></div>`;
+  }
+}
+
+function getMonthly(price){ return Math.ceil(price/12).toLocaleString(); }
+
+function renderProducts(products){
+  const grid=document.getElementById('productsGrid');
+  if(!products.length){ grid.innerHTML='<div class="loading">Ничего не найдено.</div>'; return; }
+  grid.innerHTML = products.map((p,i)=>{
+    const specs = Object.entries(p.specs||{}).slice(0,3).map(([,v])=>`<span class="prod-tag">${v}</span>`).join('');
+    const sw = (p.colors||[]).map((c,ci)=>`<div class="swatch${ci===0?' active':''}" style="background:${c.hex}" title="${c.name}" onclick="event.stopPropagation();selectSwatch(event,this)"></div>`).join('');
+    const badge = p.badge?`<span class="prod-badge badge-${p.badge.toLowerCase()}">${p.badge}</span>`:'';
+    const isWished = wishlist.includes(p.id);
+    const inCompare = compareList.some(x=>x.id===p.id);
+    const addBtn = p.stock>0
+      ? `<button class="add-btn" onclick="event.stopPropagation();addToCart(${p.id})" title="В корзину">+</button>`
+      : `<span class="out-stock">Нет в наличии</span>`;
+    // fake reviews 4-5 stars
+    const r = 4 + (p.id%2); const rc = 12 + (p.id*7)%83;
+    return `
+    <div class="prod-card reveal" style="transition-delay:${i*.06}s" onclick="openProductModal(${p.id})">
+      ${badge}
+      <div class="prod-img">
+        ${getPhoneImg(p.slug, p.brand, p.name)}
+        <div class="prod-actions">
+          <button class="prod-action-btn${isWished?' active':''}" onclick="event.stopPropagation();toggleWish(${p.id},this)" title="Избранное">${isWished?'❤️':'🤍'}</button>
+          <button class="prod-action-btn${inCompare?' active':''}" onclick="event.stopPropagation();toggleCompare(${p.id},this)" title="Сравнить">⚖</button>
+        </div>
+      </div>
+      <div class="prod-body">
+        <div class="prod-brand">${p.brand||'Grove'}</div>
+        <div class="prod-name">${p.name}</div>
+        <div><span class="stars">${'★'.repeat(r)}${'☆'.repeat(5-r)}</span><span class="rating-count">(${rc})</span></div>
+        <div class="prod-installment">от ${getMonthly(p.price)} тг/мес в рассрочку</div>
+        ${sw?`<div class="swatches">${sw}</div>`:''}
+        <div class="prod-tags">${specs}</div>
+        <div class="prod-footer">
+          <div>
+            <div class="prod-price-main">${Math.round(p.price).toLocaleString()} тг</div>
+            ${p.compare_price?`<div class="prod-price-old">${Math.round(p.compare_price).toLocaleString()} тг</div>`:''}
+          </div>
+          ${addBtn}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  observeReveal();
+}
+
+function selectSwatch(e,el){
+  el.closest('.swatches').querySelectorAll('.swatch').forEach(s=>s.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// Product detail modal
+function openProductModal(pid){
+  const p = allProducts.find(x=>x.id===pid); if(!p) return;
+  const specs = Object.entries(p.specs||{}).map(([k,v])=>`<tr><td style="color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;padding:.5rem .8rem .5rem 0;">${k}</td><td style="font-size:.85rem;font-weight:500;padding:.5rem 0;">${v}</td></tr>`).join('');
+  const sw = (p.colors||[]).map((c,ci)=>`<div class="swatch${ci===0?' active':''}" style="background:${c.hex};width:18px;height:18px;" title="${c.name}" onclick="selectSwatch(event,this)"></div>`).join('');
+  const r=4+(p.id%2); const rc=12+(p.id*7)%83;
+  const imgUrl = PHONE_IMAGES[p.slug];
+  const detailImg = imgUrl
+    ? `<div style="text-align:center;margin-bottom:1rem;background:var(--parchment);border-radius:16px;padding:1.2rem;"><img src="${imgUrl}" alt="${p.name}" style="max-height:200px;object-fit:contain;filter:drop-shadow(0 4px 12px rgba(0,0,0,.12));"></div>`
+    : '';
+  document.getElementById('checkoutContent').innerHTML = `
+    ${detailImg}
+    <h2>${p.name}</h2>
+    <div style="margin:.3rem 0 .8rem;"><span class="stars" style="font-size:.9rem;">${'★'.repeat(r)}${'☆'.repeat(5-r)}</span><span class="rating-count">(${rc} отзывов)</span></div>
+    <div style="font-size:1.6rem;font-family:'Playfair Display',serif;font-weight:700;color:var(--moss);">${Math.round(p.price).toLocaleString()} тг <span style="font-size:.9rem;color:var(--muted);font-weight:400;font-family:'Jost',sans-serif;">или ${getMonthly(p.price)} тг/мес</span></div>
+    ${p.compare_price?`<div style="font-size:.8rem;color:var(--clay);text-decoration:line-through;">${Math.round(p.compare_price).toLocaleString()} тг</div>`:''}
+    <p style="font-size:.88rem;color:var(--muted);line-height:1.7;margin:1rem 0;">${p.description||'Флагманский телефон Grove с натуральными материалами.'}</p>
+    ${sw?`<div style="margin:.5rem 0 1rem;"><div style="font-size:.72rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;">Цвет</div><div class="swatches" style="gap:6px;">${sw}</div></div>`:''}
+    <table style="width:100%;margin:1rem 0;">${specs}</table>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:1rem;">
+      <button class="modal-btn" onclick="addToCart(${p.id});closeCheckout()">+ В корзину</button>
+      <button class="modal-btn secondary" onclick="toggleWish(${p.id});closeCheckout()">❤️ Избранное</button>
+    </div>
+    <p style="text-align:center;font-size:.72rem;color:var(--muted);margin-top:.8rem;">✓ В наличии ${p.stock} шт. · Гарантия 2 года · Бесплатный возврат 14 дней</p>
+  `;
+  document.getElementById('checkoutOverlay').classList.add('open');
+}
+function closeCheckout(){ document.getElementById('checkoutOverlay').classList.remove('open'); }
+
+// ── Wishlist ─────────────────────────────────────────────────────────────
+function updateWishBadge(){
+  const b=document.getElementById('wishBadge');
+  b.textContent=wishlist.length;
+  b.style.display=wishlist.length?'flex':'none';
+}
+function toggleWish(pid, btn){
+  const idx=wishlist.indexOf(pid);
+  if(idx>=0){ wishlist.splice(idx,1); showToast('Удалено из избранного'); }
+  else { wishlist.push(pid); showToast('❤️ Добавлено в избранное'); }
+  localStorage.setItem('grove_wish',JSON.stringify(wishlist));
+  updateWishBadge();
+  // update button if provided
+  if(btn){ btn.textContent=wishlist.includes(pid)?'❤️':'🤍'; btn.classList.toggle('active',wishlist.includes(pid)); }
+  renderWishlist();
+}
+function openWishlist(){ document.getElementById('wishlistPanel').classList.add('open'); document.getElementById('cartBg').style.display='block'; renderWishlist(); }
+function closeWishlist(){ document.getElementById('wishlistPanel').classList.remove('open'); document.getElementById('cartBg').style.display='none'; }
+function renderWishlist(){
+  const body=document.getElementById('wishlistBody');
+  const footer=document.getElementById('wishlistFooter');
+  const items=allProducts.filter(p=>wishlist.includes(p.id));
+  if(!items.length){ body.innerHTML='<div class="cart-empty"><div class="ce-icon">❤️</div><p>Избранное пусто.</p><p style="font-size:.78rem;margin-top:.4rem;color:var(--muted)">Нажмите 🤍 на любом телефоне.</p></div>'; footer.innerHTML=''; return; }
+  body.innerHTML=items.map((p,i)=>{
+    const imgUrl = PHONE_IMAGES[p.slug];
+    const imgHtml = imgUrl
+      ? `<img src="${imgUrl}" alt="${p.name}" style="width:42px;height:52px;object-fit:contain;">`
+      : '📱';
+    return `
+    <div class="cart-item">
+      <div class="ci-emoji">${imgHtml}</div>
+      <div class="ci-info">
+        <div class="ci-name">${p.name}</div>
+        <div class="ci-color">${Math.round(p.price).toLocaleString()} тг</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:.3rem;align-items:flex-end;">
+        <button class="ci-remove" onclick="toggleWish(${p.id})">✕</button>
+        <button onclick="addToCart(${p.id});closeWishlist()" style="background:var(--moss);color:#fff;border:none;padding:.3rem .7rem;border-radius:100px;font-size:.72rem;cursor:pointer;">+ В корзину</button>
+      </div>
+    </div>`;
+  }).join('');
+  footer.innerHTML=`<button class="modal-btn" onclick="wishlist.slice().forEach(pid=>addToCart(pid));closeWishlist()">Всё в корзину 🌿</button>`;
+}
+
+// ── Compare ──────────────────────────────────────────────────────────────
+function toggleCompare(pid, btn){
+  const p=allProducts.find(x=>x.id===pid); if(!p) return;
+  const idx=compareList.findIndex(x=>x.id===pid);
+  if(idx>=0){ compareList.splice(idx,1); showToast('Убрано из сравнения'); }
+  else if(compareList.length>=3){ showToast('Максимум 3 телефона для сравнения',true); return; }
+  else { compareList.push(p); showToast('⚖ Добавлено для сравнения'); }
+  if(btn){ btn.classList.toggle('active',compareList.some(x=>x.id===pid)); }
+  const bar=document.getElementById('compareBar');
+  document.getElementById('compareCount').textContent=`${compareList.length} выбрано`;
+  bar.classList.toggle('show',compareList.length>0);
+}
+function clearCompare(){ compareList=[]; document.getElementById('compareBar').classList.remove('show'); document.querySelectorAll('.prod-action-btn.active[title="Сравнить"]').forEach(b=>b.classList.remove('active')); }
+function openCompare(){
+  if(compareList.length<2){ showToast('Выберите минимум 2 телефона',true); return; }
+  const specKeys=[...new Set(compareList.flatMap(p=>Object.keys(p.specs||{})))];
+  const headers=compareList.map((p,i)=>{
+    const cImg = PHONE_IMAGES[p.slug];
+    const cImgHtml = cImg ? `<img src="${cImg}" style="width:50px;height:70px;object-fit:contain;display:block;margin:0 auto .4rem;">` : `<span class="compare-emoji">📱</span>`;
+    return `<th>${cImgHtml}${p.name}<br><span style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--moss);">${Math.round(p.price).toLocaleString()} тг</span></th>`;
+  }).join('');
+  const rows=[
+    `<tr><td>Цена</td>${compareList.map(p=>`<td class="${compareList.every(x=>x.price>=p.price)?'compare-best':''}">${Math.round(p.price).toLocaleString()} тг</td>`).join('')}</tr>`,
+    `<tr><td>В наличии</td>${compareList.map(p=>`<td>${p.stock} шт.</td>`).join('')}</tr>`,
+    ...specKeys.map(k=>`<tr><td>${k}</td>${compareList.map(p=>`<td>${(p.specs||{})[k]||'—'}</td>`).join('')}</tr>`),
+  ].join('');
+  document.getElementById('compareContent').innerHTML=`<table class="compare-table"><thead><tr><th></th>${headers}</tr></thead><tbody>${rows}</tbody></table>
+  <div style="display:grid;grid-template-columns:repeat(${compareList.length},1fr);gap:.6rem;margin-top:1rem;">
+    ${compareList.map(p=>`<button class="modal-btn" style="margin:0" onclick="addToCart(${p.id});closeCompare()">+ В корзину</button>`).join('')}
+  </div>`;
+  document.getElementById('compareOverlay').classList.add('open');
+}
+function closeCompare(){ document.getElementById('compareOverlay').classList.remove('open'); }
+
+// ── Search ───────────────────────────────────────────────────────────────
+function onSearch(q){
+  const dd=document.getElementById('searchDropdown');
+  if(!q.trim()||!allProducts.length){ dd.style.display='none'; return; }
+  const results=allProducts.filter(p=>p.name.toLowerCase().includes(q.toLowerCase())||p.brand?.toLowerCase().includes(q.toLowerCase())).slice(0,5);
+  if(!results.length){ dd.style.display='none'; return; }
+  dd.innerHTML=results.map(p=>`
+    <div class="search-item" onclick="openProductModal(${p.id});document.getElementById('searchDropdown').style.display='none';document.getElementById('searchInput').value=''">
+      <img src="${PHONE_IMAGES[p.slug]||''}" style="width:30px;height:40px;object-fit:contain;flex-shrink:0;${PHONE_IMAGES[p.slug]?'':'display:none'}">
+      <div><div class="search-item-name">${p.name}</div><div class="search-item-price">${Math.round(p.price).toLocaleString()} тг</div></div>
+    </div>`).join('');
+  dd.style.display='block';
+}
+function hideSearch(){ document.getElementById('searchDropdown').style.display='none'; }
+
+// ── Cart ─────────────────────────────────────────────────────────────────
+function updateCartBadge(){
+  const c=document.getElementById('cartCount');
+  c.textContent=cart.item_count||0;
+  c.style.display=cart.item_count>0?'flex':'none';
+}
+async function loadCart(){
+  if(!token) return;
+  try{ cart=await apiCall('/cart'); updateCartBadge(); renderCartPanel(); }catch(_){}
+}
+async function addToCart(productId){
+  if(!token){ openAuth('login'); showToast('🔐 Войдите чтобы добавить в корзину'); return; }
+  try{
+    cart=await apiCall('/cart',{method:'POST',body:JSON.stringify({product_id:productId,quantity:1})});
+    updateCartBadge(); renderCartPanel();
+    showToast('🌿 Добавлено в корзину!');
+  }catch(e){ showToast('⚠️ '+e.message,true); }
+}
+async function updateQty(itemId,qty){
+  if(qty<1) return removeItem(itemId);
+  try{ cart=await apiCall(`/cart/${itemId}`,{method:'PATCH',body:JSON.stringify({quantity:qty})}); updateCartBadge(); renderCartPanel(); }catch(e){ showToast(e.message,true); }
+}
+async function removeItem(itemId){
+  try{ cart=await apiCall(`/cart/${itemId}`,{method:'DELETE'}); updateCartBadge(); renderCartPanel(); }catch(_){}
+}
+function renderCartPanel(){
+  const body=document.getElementById('cartBody'), footer=document.getElementById('cartFooter');
+  if(!cart.items?.length){
+    body.innerHTML='<div class="cart-empty"><div class="ce-icon">🛍</div><p>Корзина пуста.</p><p style="font-size:.78rem;color:var(--muted);margin-top:.4rem">Добавьте телефоны из каталога.</p></div>';
+    footer.innerHTML=''; return;
+  }
+  body.innerHTML=cart.items.map(item=>{
+    const imgUrl = PHONE_IMAGES[item.slug];
+    const imgHtml = imgUrl
+      ? `<img src="${imgUrl}" alt="${item.name}" style="width:42px;height:52px;object-fit:contain;">`
+      : '📱';
+    return `
+    <div class="cart-item">
+      <div class="ci-emoji">${imgHtml}</div>
+      <div class="ci-info">
+        <div class="ci-name">${item.name}</div>
+        ${item.color?`<div class="ci-color">Цвет: ${item.color}</div>`:''}
+        <div class="ci-qty">
+          <button class="qty-btn" onclick="updateQty(${item.id},${item.quantity-1})">−</button>
+          <span>${item.quantity}</span>
+          <button class="qty-btn" onclick="updateQty(${item.id},${item.quantity+1})">+</button>
+        </div>
+      </div>
+      <div><div class="ci-price">${Math.round(item.line_total).toLocaleString()} тг</div><button class="ci-remove" onclick="removeItem(${item.id})">✕</button></div>
+    </div>`;
+  }).join('');
+  const ship=cart.subtotal>=50000?0:1990;
+  const tax=0;
+  const total=(cart.subtotal+ship).toFixed(2);
+  footer.innerHTML=`
+    <div class="cart-totals" style="margin-bottom:1rem;">
+      <div class="cart-row"><span>Товары</span><span>${Math.round(cart.subtotal).toLocaleString()} тг</span></div>
+      <div class="cart-row"><span>Доставка</span><span>${ship===0?'Бесплатно':Math.round(ship).toLocaleString()+' тг'}</span></div>
+      <div class="cart-row total"><span>Итого</span><span>${Math.round(parseFloat(total)).toLocaleString()} тг</span></div>
+    </div>
+    <button class="modal-btn" style="margin-top:0" onclick="openCheckoutForm()">Оформить заказ →</button>`;
+}
+function openCart(){ document.getElementById('cartPanel').classList.add('open'); document.getElementById('cartBg').style.display='block'; renderCartPanel(); }
+function closeCart(){ document.getElementById('cartPanel').classList.remove('open'); document.getElementById('wishlistPanel').classList.remove('open'); document.getElementById('cartBg').style.display='none'; }
+
+// ── Checkout form ─────────────────────────────────────────────────────────
+function openCheckoutForm(){
+  closeCart();
+  if(!token){ openAuth('login'); return; }
+  const ship=cart.subtotal>=50000?0:1990;
+  const tax=0;
+  const total=(cart.subtotal+ship).toFixed(2);
+  document.getElementById('checkoutContent').innerHTML=`
+    <h2>Оформление заказа</h2>
+    <p class="modal-sub">${cart.item_count} товар(ов) · ${Math.round(parseFloat(total)).toLocaleString()} тг</p>
+    <div class="form-group"><label>ФИО</label><input id="coName" placeholder="Иванов Иван" value="${currentUser?.full_name||''}"/></div>
+    <div class="form-group"><label>Адрес</label><input id="coAddr" placeholder="ул. Достык, 5"/></div>
+    <div class="form-row">
+      <div class="form-group"><label>Город</label><input id="coCity" placeholder="Алматы"/></div>
+      <div class="form-group"><label>Индекс</label><input id="coZip" placeholder="050000"/></div>
+    </div>
+    <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:1rem;margin-bottom:.5rem;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem;">
+        <span style="font-size:.8rem;font-weight:600;color:var(--moss);">🔒 Данные карты</span>
+        <span style="font-size:.75rem;color:var(--muted);">VISA &nbsp;·&nbsp; Mastercard</span>
+      </div>
+      <div class="form-group" style="margin-bottom:.6rem;">
+        <input id="coCardNum" placeholder="0000 0000 0000 0000" maxlength="19"
+          oninput="fmtCard(this)"
+          style="font-size:1rem;letter-spacing:.1em;font-family:monospace;width:100%;"/>
+      </div>
+      <div style="display:flex;gap:.6rem;">
+        <div class="form-group" style="flex:1;margin-bottom:0;">
+          <input id="coExpiry" placeholder="ММ/ГГ" maxlength="5" oninput="fmtExpiry(this)"/>
+        </div>
+        <div class="form-group" style="width:80px;margin-bottom:0;">
+          <input id="coCvv" placeholder="CVV" maxlength="3" type="password"/>
+        </div>
+      </div>
+    </div>
+    <div class="form-error" id="coErr"></div>
+    <button class="modal-btn" id="payBtn" onclick="submitCheckout()">
+      Оплатить ${Math.round(parseFloat(total)).toLocaleString()} тг 🌿
+    </button>
+    <p style="text-align:center;font-size:.68rem;color:var(--muted);margin-top:.6rem;">
+      🔒 Защищено SSL · Данные карты не хранятся
+    </p>
+  `;
+  document.getElementById('checkoutOverlay').classList.add('open');
+}
+
+// Card input formatters
+function fmtCard(el){
+  let v = el.value.replace(/\D/g,'').slice(0,16);
+  el.value = v.replace(/(\d{4})(?=\d)/g,'$1 ');
+}
+function fmtExpiry(el){
+  let v = el.value.replace(/\D/g,'').slice(0,4);
+  if(v.length>=3) v = v.slice(0,2)+'/'+v.slice(2);
+  el.value = v;
+}
+function luhn(n){
+  let s=0,alt=false;
+  for(let i=n.length-1;i>=0;i--){
+    let d=parseInt(n[i]);
+    if(alt){ d*=2; if(d>9) d-=9; }
+    s+=d; alt=!alt;
+  }
+  return s%10===0;
+}
+
+async function submitCheckout(){
+  const city   = document.getElementById('coCity').value.trim();
+  const zip    = document.getElementById('coZip').value.trim();
+  const errEl  = document.getElementById('coErr');
+  const btn    = document.getElementById('payBtn');
+  const cardEl = document.getElementById('coCardNum');
+  const expEl  = document.getElementById('coExpiry');
+  const cvvEl  = document.getElementById('coCvv');
+  errEl.style.display='none';
+
+  // Validate city
+  if(!city){ errEl.textContent='Укажите город.'; errEl.style.display='block'; return; }
+
+  // Validate card
+  const cardRaw = (cardEl?.value||'').replace(/\s/g,'');
+  const expiry  = expEl?.value||'';
+  const cvv     = cvvEl?.value||'';
+
+  if(cardEl){
+    if(cardRaw.length<16){ errEl.textContent='Введите номер карты (16 цифр).'; errEl.style.display='block'; cardEl.focus(); return; }
+    if(!luhn(cardRaw)){ errEl.textContent='Неверный номер карты.'; errEl.style.display='block'; cardEl.focus(); return; }
+    if(!/^\d{2}\/\d{2}$/.test(expiry)){ errEl.textContent='Введите срок карты (ММ/ГГ).'; errEl.style.display='block'; expEl.focus(); return; }
+    const [mm,yy]=expiry.split('/').map(Number);
+    const now=new Date(); const cy=now.getFullYear()%100; const cm=now.getMonth()+1;
+    if(mm<1||mm>12||yy<cy||(yy===cy&&mm<cm)){ errEl.textContent='Срок действия карты истёк.'; errEl.style.display='block'; return; }
+    if(cvv.length<3){ errEl.textContent='Введите CVV (3 цифры).'; errEl.style.display='block'; cvvEl.focus(); return; }
+  }
+
+  // Animate button
+  btn.disabled=true;
+  btn.innerHTML='<span style="display:inline-block;animation:spin 1s linear infinite">⏳</span> Обработка…';
+
+  try{
+    const order=await apiCall('/orders/checkout',{method:'POST',body:JSON.stringify({address:{line1:document.getElementById('coAddr').value,city,postal_code:zip,country:'KZ'}})});
+    const pay=await apiCall('/payments/pay',{method:'POST',body:JSON.stringify({order_id:order.id})});
+
+    cart={items:[],subtotal:0,item_count:0}; updateCartBadge();
+
+    if(pay.redirect_url){
+      showToast('Переходим на страницу оплаты…');
+      setTimeout(()=>{ window.location.href=pay.redirect_url; }, 600);
+    } else if(pay.success){
+      document.getElementById('checkoutContent').innerHTML=`
+        <div class="success-icon">🌿</div>
+        <h2>Заказ оформлен!</h2>
+        <p class="modal-sub">Спасибо за покупку в Grove!</p>
+        <div class="order-summary">
+          <div class="order-row"><span>Заказ #${order.id}</span><span style="color:var(--fern)">✅ Оплачен</span></div>
+          ${(order.items||[]).map(i=>`<div class="order-row"><span>${i.product_name} ×${i.quantity}</span><span>${Math.round(i.subtotal).toLocaleString()} тг</span></div>`).join('')}
+          <div class="order-row" style="margin-top:.4rem"><span>Доставка</span><span>${order.shipping_cost===0?'Бесплатно':Math.round(order.shipping_cost).toLocaleString()+' тг'}</span></div>
+          <div class="order-row bold"><span>Итого</span><span>${Math.round(order.total).toLocaleString()} тг</span></div>
+        </div>
+        <button class="modal-btn" onclick="closeCheckout()">Продолжить покупки 🌿</button>`;
+      showToast('✅ Заказ подтверждён!');
+    }
+  }catch(e){
+    errEl.textContent='Ошибка: '+(e.message||'попробуйте ещё раз');
+    errEl.style.display='block';
+    btn.disabled=false;
+    btn.innerHTML=`Оплатить 🌿`;
+  }
+}
+
+// ── FAQ ──────────────────────────────────────────────────────────────────
+function toggleFaq(btn){
+  const a=btn.nextElementSibling;
+  const isOpen=btn.classList.contains('open');
+  document.querySelectorAll('.faq-q.open').forEach(b=>{ b.classList.remove('open'); b.nextElementSibling.classList.remove('open'); });
+  if(!isOpen){ btn.classList.add('open'); a.classList.add('open'); }
+}
+
+// ── Filters ──────────────────────────────────────────────────────────────
+document.getElementById('sortSelect')?.addEventListener('change', ()=>{ loadProducts(currentCat); });
+document.getElementById('filterBtns').addEventListener('click',e=>{
+  const btn=e.target.closest('.filter-btn'); if(!btn) return;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  loadProducts(btn.dataset.cat);
+});
+
+
+// ── Profile ───────────────────────────────────────────────────────────────
+function openProfile(){
+  if(!currentUser){ openAuth('login'); return; }
+  const p = currentUser;
+  document.getElementById('profileAvatar').textContent = (p.full_name||p.email)[0].toUpperCase();
+  document.getElementById('profileName').textContent = p.full_name || 'Без имени';
+  document.getElementById('profileEmailDisp').textContent = p.email;
+  document.getElementById('profileRole').textContent = p.role==='admin'?'Администратор':'Покупатель';
+  document.getElementById('editNameInput').value = p.full_name || '';
+  document.getElementById('statWish').textContent = wishlist.length;
+  document.getElementById('statCart').textContent = cart.item_count || 0;
+  document.getElementById('profilePanel').classList.add('open');
+  document.getElementById('cartBg').style.display = 'block';
+  loadProfileOrders();
+}
+function closeProfile(){
+  document.getElementById('profilePanel').classList.remove('open');
+  document.getElementById('cartBg').style.display = 'none';
+}
+async function loadProfileOrders(){
+  const el = document.getElementById('profileOrders');
+  const statEl = document.getElementById('statOrders');
+  try{
+    const d = await apiCall('/orders?per_page=3');
+    statEl.textContent = d.total;
+    if(!d.items.length){
+      el.innerHTML = '<p style="font-size:.82rem;color:var(--muted);padding:.5rem 0;">Заказов пока нет.</p>'; return;
+    }
+    el.innerHTML = d.items.map(o=>{
+      const statusClass = {paid:'status-paid',pending:'status-pending',delivered:'status-delivered'}[o.status]||'status-pending';
+      const statusLabel = {paid:'Оплачен',pending:'Ожидает',delivered:'Доставлен',shipped:'Отправлен',cancelled:'Отменён'}[o.status]||o.status;
+      const itemNames = o.items.map(i=>i.product_name).join(', ');
+      return `<div class="order-mini">
+        <div class="order-mini-top">
+          <span class="order-mini-id">Заказ #${o.id}</span>
+          <span class="order-mini-status ${statusClass}">${statusLabel}</span>
+        </div>
+        <div class="order-mini-items">${itemNames}</div>
+        <div class="order-mini-total">${Math.round(o.total).toLocaleString()} тг</div>
+      </div>`;
+    }).join('');
+  }catch(e){ el.innerHTML='<p style="font-size:.8rem;color:var(--muted);">Не удалось загрузить заказы.</p>'; }
+}
+function toggleEditForm(){ document.getElementById('editNameForm').classList.toggle('open'); }
+function togglePassForm(){ document.getElementById('editPassForm').classList.toggle('open'); }
+async function saveName(){
+  const name = document.getElementById('editNameInput').value.trim();
+  if(!name) return;
+  try{
+    const u = await apiCall('/auth/me',{method:'PATCH',body:JSON.stringify({full_name:name})});
+    currentUser = u; localStorage.setItem('grove_user', JSON.stringify(u));
+    document.getElementById('profileName').textContent = u.full_name;
+    document.getElementById('profileAvatar').textContent = u.full_name[0].toUpperCase();
+    document.getElementById('editNameForm').classList.remove('open');
+    showToast('✅ Имя изменено');
+  }catch(e){ showToast(e.message, true); }
+}
+async function savePass(){
+  const cur = document.getElementById('curPass').value;
+  const nw  = document.getElementById('newPass').value;
+  const err = document.getElementById('passErr');
+  err.style.display='none';
+  if(nw.length<8){ err.textContent='Минимум 8 символов'; err.style.display='block'; return; }
+  try{
+    await apiCall('/auth/me/change-password',{method:'POST',body:JSON.stringify({current_password:cur,new_password:nw})});
+    document.getElementById('editPassForm').classList.remove('open');
+    document.getElementById('curPass').value=''; document.getElementById('newPass').value='';
+    showToast('✅ Пароль изменён');
+  }catch(e){ err.textContent=e.message; err.style.display='block'; }
+}
+
+
+// ── Mobile menu ────────────────────────────────────────────────────────────
+async function openAllOrders(){
+  closeProfile();
+  const panel = document.getElementById('ordersPanel');
+  const list  = document.getElementById('allOrdersList');
+  // slight delay so closeProfile doesn't hide cartBg again
+  setTimeout(()=>{ 
+    panel.style.right = '0';
+    document.getElementById('cartBg').style.display = 'block';
+  }, 50);
+  await renderAllOrders();
+}
+async function renderAllOrders(){
+  const list = document.getElementById('allOrdersList');
+  list.innerHTML = '<div class="loading" style="padding:2rem;text-align:center;"><div class="spinner"></div></div>';
+  try{
+    const d = await apiCall('/orders?per_page=50');
+    if(!d.items.length){
+      list.innerHTML = '<p style="text-align:center;color:var(--muted);padding:2rem 1rem;">Заказов пока нет.<br><span style="font-size:.8rem;">Добавьте товар в корзину и оформите заказ.</span></p>'; return;
+    }
+    const statusInfo = {
+      paid:      {label:'✅ Оплачен',    color:'#2d7a3a', bg:'#f0faf2'},
+      pending:   {label:'⏳ Ожидает',    color:'#b45309', bg:'#fffbeb'},
+      shipped:   {label:'🚚 Отправлен',  color:'#7c3aed', bg:'#f5f3ff'},
+      delivered: {label:'📦 Доставлен',  color:'#1d4ed8', bg:'#eff6ff'},
+      cancelled: {label:'❌ Отменён',    color:'#dc2626', bg:'#fef2f2'},
+      refunded:  {label:'↩️ Возврат',    color:'#6b7280', bg:'#f3f4f6'},
+    };
+    list.innerHTML = d.items.map(o=>{
+      const si = statusInfo[o.status] || {label:o.status, color:'#666', bg:'#f5f5f5'};
+      const itemNames = (o.items||[]).map(i=>`<span style="display:flex;justify-content:space-between;"><span>${i.product_name} ×${i.quantity}</span><span style="color:var(--muted)">${Math.round(i.subtotal).toLocaleString()} тг</span></span>`).join('');
+      const date = new Date(o.created_at).toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'});
+
+      const cancelBtn = o.status==='pending'
+        ? `<button onclick="cancelOrder(${o.id},this)" style="flex:1;background:none;border:1px solid #dc2626;color:#dc2626;padding:.4rem;border-radius:8px;font-size:.75rem;cursor:pointer;font-weight:500;">✕ Отменить</button>`
+        : '';
+      const refundBtn = (o.status==='paid'||o.status==='shipped')
+        ? `<button onclick="refundOrder(${o.id},this)" style="flex:1;background:none;border:1px solid #6b7280;color:#6b7280;padding:.4rem;border-radius:8px;font-size:.75rem;cursor:pointer;font-weight:500;">↩ Возврат</button>`
+        : '';
+      const deleteBtn = ['cancelled','refunded','delivered'].includes(o.status)
+        ? `<button onclick="deleteOrder(${o.id},this)" style="flex:1;background:none;border:1px solid #dc2626;color:#dc2626;padding:.4rem;border-radius:8px;font-size:.75rem;cursor:pointer;font-weight:500;">🗑 Удалить</button>`
+        : '';
+      const actionRow = (cancelBtn||refundBtn||deleteBtn)
+        ? `<div style="display:flex;gap:.5rem;margin-top:.7rem;">${cancelBtn}${refundBtn}${deleteBtn}</div>` : '';
+
+      return `<div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:1rem;margin-bottom:.8rem;box-shadow:0 1px 4px rgba(0,0,0,.04);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem;">
+          <span style="font-weight:700;color:var(--moss);font-size:.95rem;">Заказ #${o.id}</span>
+          <span style="font-size:.73rem;font-weight:600;color:${si.color};background:${si.bg};padding:.2rem .6rem;border-radius:20px;">${si.label}</span>
+        </div>
+        <div style="font-size:.73rem;color:var(--muted);margin-bottom:.6rem;">${date}</div>
+        <div style="font-size:.8rem;color:var(--text);line-height:1.8;border-top:1px solid var(--border);padding-top:.6rem;margin-bottom:.6rem;">${itemNames}</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);padding-top:.6rem;">
+          <span style="font-size:.78rem;color:var(--muted);">Доставка: ${o.shipping_cost===0?'Бесплатно':Math.round(o.shipping_cost).toLocaleString()+' тг'}</span>
+          <span style="font-weight:700;color:var(--moss);font-size:1rem;">${Math.round(o.total).toLocaleString()} тг</span>
+        </div>
+        ${actionRow}
+      </div>`;
+    }).join('');
+  }catch(e){ list.innerHTML=`<p style="text-align:center;color:var(--muted);padding:2rem;">${e.message}</p>`; }
+}
+function closeAllOrders(){
+  document.getElementById('ordersPanel').style.right = '-100%';
+  document.getElementById('cartBg').style.display = 'none';
+}
+async function deleteOrder(oid, btn){
+  if(!confirm('Удалить заказ #'+oid+' из истории?')) return;
+  btn.disabled=true; btn.textContent='…';
+  try{
+    await apiCall('/orders/'+oid+'/delete',{method:'DELETE'});
+    showToast('🗑 Заказ #'+oid+' удалён');
+    await renderAllOrders();
+  }catch(e){ showToast(e.message,true); btn.disabled=false; btn.textContent='🗑 Удалить'; }
+}
+async function cancelOrder(oid, btn){
+  if(!confirm('Отменить заказ #'+oid+'?\nТовары вернутся на склад.')) return;
+  btn.disabled=true; btn.textContent='…';
+  try{
+    await apiCall('/orders/'+oid+'/cancel',{method:'POST'});
+    showToast('Заказ #'+oid+' отменён');
+    await renderAllOrders();
+  }catch(e){ showToast(e.message,true); btn.disabled=false; btn.textContent='✕ Отменить'; }
+}
+async function refundOrder(oid, btn){
+  if(!confirm('Запросить возврат по заказу #'+oid+'?\nСредства будут возвращены на карту в течение 3–5 рабочих дней.')) return;
+  btn.disabled=true; btn.textContent='…';
+  try{
+    await apiCall('/orders/'+oid+'/refund',{method:'POST'});
+    showToast('↩ Возврат по заказу #'+oid+' оформлен');
+    await renderAllOrders();
+  }catch(e){ showToast(e.message,true); btn.disabled=false; btn.textContent='↩ Возврат'; }
+}
+
+function toggleMobileMenu(){
+  const menu = document.getElementById('mobileMenu');
+  const btn  = document.getElementById('burgerBtn');
+  const isOpen = menu.classList.contains('open');
+  if(isOpen){ closeMobileMenu(); }
+  else { menu.classList.add('open'); btn.classList.add('open'); document.body.style.overflow='hidden'; }
+}
+function closeMobileMenu(){
+  document.getElementById('mobileMenu').classList.remove('open');
+  document.getElementById('burgerBtn').classList.remove('open');
+  document.body.style.overflow='';
+}
+// Update mobile auth button
+function updateMobileMenu(){
+  const btn = document.getElementById('mobileAuthBtn');
+  if(!btn) return;
+  if(currentUser){
+    btn.textContent = '👤 ' + (currentUser.full_name?.split(' ')[0] || 'Профиль');
+    btn.onclick = ()=>{ closeMobileMenu(); openProfile(); };
+  } else {
+    btn.textContent = 'Войти';
+    btn.onclick = ()=>{ closeMobileMenu(); openAuth('login'); };
+  }
+}
+
+// ── Init ─────────────────────────────────────────────────────────────────
+updateAuthUI();
+updateWishBadge();
+loadProducts();
+if(token) loadCart();
+observeReveal();
+</script>
+</body>
+</html>
