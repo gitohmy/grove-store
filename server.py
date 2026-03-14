@@ -846,6 +846,21 @@ def admin_stats():
 def health():
     return jsonify({"status": "ok", "app": "Grove Store API", "time": datetime.now().isoformat()})
 
+@app.route("/api/debug/images")
+def debug_images():
+    """Check if static images exist in container"""
+    import glob
+    static_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static", "images")
+    exists = os.path.isdir(static_dir)
+    files = glob.glob(os.path.join(static_dir, "*.svg")) if exists else []
+    return jsonify({
+        "static_dir": static_dir,
+        "dir_exists": exists,
+        "file_count": len(files),
+        "files": [os.path.basename(f) for f in sorted(files)[:10]],
+        "total": len(files)
+    })
+
 @app.route("/api")
 def root():
     return jsonify({"message": "🌿 Grove Store API", "docs": "/api/products"})
@@ -1262,55 +1277,81 @@ footer{background:var(--dusk);color:rgba(244,240,230,.45);padding:4rem 2rem 2rem
 .overlay.open{display:flex;}
 .modal{background:var(--cream);border-radius:24px;padding:2.2rem;width:90%;max-width:420px;position:relative;animation:modalIn .3s cubic-bezier(.34,1.56,.64,1);max-height:90vh;overflow-y:auto;}
 .modal-lg{max-width:520px;}
-.modal-product{max-width:680px;padding:0;overflow:hidden;}
-.pd-grid{display:grid;grid-template-columns:1fr 1fr;min-height:400px;}
-.pd-gallery{background:var(--parchment);padding:1.5rem;display:flex;flex-direction:column;position:relative;}
-.pd-main-img{flex:1;display:flex;align-items:center;justify-content:center;min-height:260px;}
-.pd-main-img img{max-height:260px;max-width:100%;object-fit:contain;filter:drop-shadow(0 8px 20px rgba(0,0,0,.12));transition:opacity .3s;}
-.pd-thumbs{display:flex;gap:.5rem;justify-content:center;margin-top:1rem;}
-.pd-thumb{width:52px;height:52px;border-radius:10px;background:#fff;border:2px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;overflow:hidden;padding:4px;}
+.modal-product{max-width:1100px;width:95vw;padding:0;overflow:hidden;border-radius:20px;max-height:92vh;}
+.pd-page{display:flex;flex-direction:column;max-height:92vh;overflow-y:auto;}
+.pd-breadcrumb{padding:1rem 2rem;font-size:.72rem;color:var(--muted);border-bottom:1px solid var(--border);background:#fff;}
+.pd-breadcrumb a{color:var(--fern);text-decoration:none;cursor:pointer;}
+.pd-breadcrumb span{margin:0 .4rem;color:var(--border);}
+.pd-layout{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+/* Gallery left */
+.pd-gallery-area{display:flex;gap:.8rem;padding:2rem;background:#fff;border-right:1px solid var(--border);}
+.pd-thumbs-col{display:flex;flex-direction:column;gap:.5rem;flex-shrink:0;}
+.pd-thumb{width:64px;height:64px;border-radius:10px;background:#fff;border:2px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;overflow:hidden;padding:4px;}
 .pd-thumb:hover{border-color:var(--sage);}
-.pd-thumb.active{border-color:var(--fern);box-shadow:0 2px 8px rgba(90,114,71,.2);}
+.pd-thumb.active{border-color:var(--fern);box-shadow:0 2px 8px rgba(90,114,71,.15);}
 .pd-thumb img{width:100%;height:100%;object-fit:contain;}
-.pd-info{padding:1.8rem;overflow-y:auto;max-height:80vh;}
-.pd-brand{font-size:.65rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--fern);margin-bottom:.3rem;}
-.pd-name{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;color:var(--moss);margin-bottom:.4rem;}
-.pd-rating{margin-bottom:.6rem;}
-.pd-price{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--moss);}
-.pd-price-old{font-size:.82rem;color:var(--clay);text-decoration:line-through;margin-left:.5rem;font-family:'Jost',sans-serif;font-weight:400;}
-.pd-monthly{font-size:.78rem;color:var(--bark);margin-top:.2rem;font-weight:500;}
-.pd-desc{font-size:.85rem;color:var(--muted);line-height:1.7;margin:1rem 0;padding-bottom:1rem;border-bottom:1px solid var(--border);}
-.pd-colors{margin-bottom:1rem;}
-.pd-colors-label{font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;}
-.pd-color-name{font-size:.75rem;color:var(--text);font-weight:500;margin-left:.5rem;}
-.pd-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin:1rem 0 0;}
-.pd-tab{background:none;border:none;padding:.6rem 1rem;font-family:'Jost',sans-serif;font-size:.78rem;font-weight:500;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;}
-.pd-tab:hover{color:var(--text);}
-.pd-tab.active{color:var(--moss);border-bottom-color:var(--fern);}
-.pd-tab-content{display:none;padding:.8rem 0;}
-.pd-tab-content.active{display:block;}
-.pd-spec-table{width:100%;}
-.pd-spec-table tr{border-bottom:1px solid var(--border);}
-.pd-spec-table tr:last-child{border:none;}
-.pd-spec-table td{padding:.55rem 0;font-size:.82rem;}
-.pd-spec-table td:first-child{color:var(--muted);width:40%;font-size:.75rem;text-transform:uppercase;letter-spacing:.04em;}
-.pd-spec-table td:last-child{font-weight:500;color:var(--text);}
-.pd-features{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.5rem;}
-.pd-feature{display:flex;align-items:center;gap:.5rem;font-size:.78rem;color:var(--text);padding:.4rem .6rem;background:var(--parchment);border-radius:8px;}
-.pd-feature-icon{font-size:1rem;}
-.pd-actions{display:grid;grid-template-columns:1fr auto;gap:.6rem;margin-top:1.2rem;}
-.pd-actions .modal-btn{margin:0;}
-.pd-wish-btn{width:46px;height:46px;border-radius:50%;border:1px solid var(--border);background:#fff;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all .2s;}
-.pd-wish-btn:hover{border-color:var(--clay);background:var(--parchment);}
-.pd-stock{font-size:.72rem;color:var(--fern);text-align:center;margin-top:.6rem;}
-.pd-badges{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.6rem;}
-.pd-badges span{font-size:.65rem;padding:.2rem .6rem;border-radius:100px;border:1px solid var(--border);color:var(--muted);}
-@media(max-width:680px){
-  .pd-grid{grid-template-columns:1fr;}
-  .pd-gallery{max-height:280px;}
-  .pd-main-img{min-height:180px;}
-  .pd-main-img img{max-height:180px;}
-  .modal-product{max-width:95vw;}
+.pd-main-img{flex:1;display:flex;align-items:center;justify-content:center;min-height:380px;position:relative;}
+.pd-main-img img{max-height:400px;max-width:100%;object-fit:contain;filter:drop-shadow(0 8px 24px rgba(0,0,0,.1));transition:opacity .25s;}
+.pd-img-counter{position:absolute;bottom:.5rem;right:.5rem;font-size:.68rem;color:var(--muted);background:rgba(255,255,255,.85);padding:.2rem .6rem;border-radius:20px;}
+.pd-badge-sale{position:absolute;top:1rem;left:0;background:var(--clay);color:#fff;font-size:.7rem;font-weight:600;padding:.3rem .9rem;border-radius:0 100px 100px 0;}
+/* Info right */
+.pd-info{padding:2rem 2rem 1.5rem;overflow-y:auto;background:var(--cream);}
+.pd-brand{font-size:.68rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--fern);margin-bottom:.4rem;}
+.pd-name{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--moss);margin-bottom:.5rem;line-height:1.2;}
+.pd-sku{font-size:.7rem;color:var(--muted);margin-bottom:.6rem;}
+.pd-rating{display:flex;align-items:center;gap:.5rem;margin-bottom:1rem;}
+.pd-rating-stars{color:#f4a636;font-size:.9rem;}
+.pd-rating-count{font-size:.78rem;color:var(--fern);cursor:pointer;text-decoration:underline;}
+.pd-price-block{background:#fff;border:1px solid var(--border);border-radius:14px;padding:1.2rem;margin-bottom:1.2rem;}
+.pd-price{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--moss);}
+.pd-price-old{font-size:.9rem;color:var(--clay);text-decoration:line-through;margin-left:.6rem;font-family:'Jost',sans-serif;font-weight:400;}
+.pd-price-save{display:inline-block;background:rgba(181,131,106,.1);color:var(--clay);font-size:.72rem;font-weight:600;padding:.15rem .6rem;border-radius:100px;margin-left:.5rem;}
+.pd-monthly{font-size:.82rem;color:var(--bark);margin-top:.4rem;font-weight:500;}
+.pd-monthly em{font-style:normal;color:var(--fern);font-weight:600;}
+/* Colors */
+.pd-section{margin-bottom:1.2rem;}
+.pd-section-label{font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.6rem;display:flex;align-items:center;gap:.4rem;}
+.pd-color-name{font-weight:500;color:var(--text);text-transform:none;letter-spacing:0;}
+.pd-color-options{display:flex;gap:.5rem;flex-wrap:wrap;}
+.pd-color-opt{width:56px;height:56px;border-radius:12px;border:2px solid var(--border);cursor:pointer;overflow:hidden;transition:all .2s;position:relative;}
+.pd-color-opt:hover{border-color:var(--sage);}
+.pd-color-opt.active{border-color:var(--fern);box-shadow:0 2px 10px rgba(90,114,71,.2);}
+.pd-color-swatch{width:100%;height:100%;display:flex;align-items:center;justify-content:center;}
+.pd-color-dot{width:28px;height:28px;border-radius:50%;border:1px solid rgba(0,0,0,.08);}
+/* Specs */
+.pd-specs-section{border-top:1px solid var(--border);padding-top:1.2rem;}
+.pd-specs-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--moss);margin-bottom:.8rem;}
+.pd-spec-grid{display:grid;gap:0;}
+.pd-spec-row{display:grid;grid-template-columns:1fr 1fr;padding:.6rem 0;border-bottom:1px solid rgba(0,0,0,.04);font-size:.82rem;}
+.pd-spec-row:nth-child(odd){background:rgba(0,0,0,.015);}
+.pd-spec-key{color:var(--muted);padding-left:.5rem;}
+.pd-spec-val{color:var(--text);font-weight:500;}
+/* Actions */
+.pd-buy-section{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--border);padding:1.2rem 2rem;display:flex;gap:.6rem;align-items:center;}
+.pd-buy-btn{flex:1;padding:.9rem;background:var(--moss);color:var(--cream);border:none;border-radius:100px;font-family:'Jost',sans-serif;font-size:.88rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:all .2s;}
+.pd-buy-btn:hover{background:var(--dusk);transform:translateY(-1px);box-shadow:0 6px 20px rgba(58,74,50,.2);}
+.pd-buy-btn.secondary{background:var(--parchment);color:var(--moss);border:1px solid var(--border);}
+.pd-buy-btn.secondary:hover{background:var(--mist);}
+.pd-icon-btn{width:46px;height:46px;border-radius:50%;border:1px solid var(--border);background:#fff;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
+.pd-icon-btn:hover{border-color:var(--clay);background:var(--parchment);}
+/* Delivery strip */
+.pd-delivery{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:1.2rem;}
+.pd-delivery-item{background:#fff;border:1px solid var(--border);border-radius:10px;padding:.7rem;text-align:center;font-size:.72rem;color:var(--muted);}
+.pd-delivery-item .icon{font-size:1.2rem;display:block;margin-bottom:.3rem;}
+.pd-delivery-item strong{color:var(--text);display:block;font-size:.75rem;}
+/* Stock */
+.pd-stock-line{display:flex;align-items:center;gap:.4rem;font-size:.78rem;margin-bottom:1rem;}
+.pd-stock-dot{width:8px;height:8px;border-radius:50%;background:#34c759;}
+.pd-stock-text{color:var(--fern);font-weight:500;}
+@media(max-width:800px){
+  .pd-layout{grid-template-columns:1fr;}
+  .pd-gallery-area{border-right:none;border-bottom:1px solid var(--border);padding:1.2rem;}
+  .pd-main-img{min-height:240px;}
+  .pd-main-img img{max-height:260px;}
+  .pd-thumbs-col{flex-direction:row;overflow-x:auto;}
+  .pd-info{padding:1.5rem;}
+  .modal-product{max-width:100vw;width:100vw;max-height:100vh;border-radius:0;}
+  .pd-buy-section{padding:1rem;}
 }
 @keyframes modalIn{from{opacity:0;transform:scale(.92);}to{opacity:1;transform:scale(1);}}
 .modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--muted);line-height:1;z-index:1;}
@@ -2224,90 +2265,102 @@ function openProductModal(pid){
   const backUrl = imgUrl ? imgUrl.replace('.svg','-back.svg') : '';
   const sideUrl = imgUrl ? imgUrl.replace('.svg','-side.svg') : '';
   const images = [imgUrl, backUrl, sideUrl].filter(Boolean);
-  const thumbLabels = ['Спереди','Сзади','Сбоку'];
 
-  // Specs table
-  const specs = Object.entries(p.specs||{}).map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join('');
+  // Specs rows
+  const specRows = Object.entries(p.specs||{}).map(([k,v])=>`<div class="pd-spec-row"><div class="pd-spec-key">${k}</div><div class="pd-spec-val">${v}</div></div>`).join('');
 
-  // Colors
-  const sw = (p.colors||[]).map((c,ci)=>`<div class="swatch${ci===0?' active':''}" style="background:${c.hex};width:20px;height:20px;" title="${c.name}" onclick="selectSwatch(event,this);document.getElementById('pdColorName').textContent='${c.name}'"></div>`).join('');
+  // Colors as thumbnail boxes
+  const colorOpts = (p.colors||[]).map((c,ci)=>`
+    <div class="pd-color-opt${ci===0?' active':''}" onclick="pdSelectColor(this,'${c.name}')" title="${c.name}">
+      <div class="pd-color-swatch"><div class="pd-color-dot" style="background:${c.hex}"></div></div>
+    </div>`).join('');
   const firstColor = (p.colors||[])[0]?.name || '';
 
-  // Feature badges
-  const featureIcons = {'Дисплей':'📱','Камера':'📸','Чип':'⚡','Батарея':'🔋','Память':'💾','Защита':'🛡','Зарядка':'🔌','5G':'📡','Корпус':'✨','Обновления':'🔄','Форм-фактор':'📐'};
-  const features = Object.entries(p.specs||{}).slice(0,6).map(([k,v])=>`<div class="pd-feature"><span class="pd-feature-icon">${featureIcons[k]||'📋'}</span>${v}</div>`).join('');
-
-  // Thumbnails
-  const thumbs = images.map((img,i)=>`<div class="pd-thumb${i===0?' active':''}" onclick="pdShowImg(${i})" title="${thumbLabels[i]||''}"><img src="${img}"></div>`).join('');
+  // Thumbnails vertical
+  const thumbs = images.map((img,i)=>`<div class="pd-thumb${i===0?' active':''}" onclick="pdShowImg(${i})"><img src="${img}"></div>`).join('');
 
   const isWished = wishlist.includes(p.id);
+  const discount = p.compare_price ? Math.round((1 - p.price/p.compare_price)*100) : 0;
+
+  const catName = p.category_name || (p.category_slug==='flagship'?'Флагманы':p.category_slug==='mid-range'?'Средний класс':'Бюджетные');
 
   const modal = document.getElementById('checkoutModal');
   modal.className = 'modal modal-product';
 
   document.getElementById('checkoutContent').innerHTML = `
-    <div class="pd-grid">
-      <div class="pd-gallery">
-        <div class="pd-main-img" id="pdMainImg">
-          <img src="${images[0]||''}" id="pdImg" alt="${p.name}">
-        </div>
-        <div class="pd-thumbs">${thumbs}</div>
+    <div class="pd-page">
+      <div class="pd-breadcrumb">
+        <a onclick="closeCheckout()">Главная</a><span>›</span>
+        <a onclick="closeCheckout();goTo('shop')">Телефоны</a><span>›</span>
+        <a onclick="closeCheckout();goTo('shop')">${catName}</a><span>›</span>
+        ${p.name}
       </div>
-      <div class="pd-info">
-        <div class="pd-brand">${p.brand||'Grove'}</div>
-        <div class="pd-name">${p.name}</div>
-        <div class="pd-rating">
-          <span class="stars" style="font-size:.85rem;">${'★'.repeat(r)}${'☆'.repeat(5-r)}</span>
-          <span class="rating-count">(${rc} отзывов)</span>
-        </div>
-        <div>
-          <span class="pd-price">${Math.round(p.price).toLocaleString()} тг</span>
-          ${p.compare_price?`<span class="pd-price-old">${Math.round(p.compare_price).toLocaleString()} тг</span>`:''}
-        </div>
-        <div class="pd-monthly">от ${getMonthly(p.price)} тг/мес в рассрочку</div>
-        <p class="pd-desc">${p.description||''}</p>
 
-        ${sw?`<div class="pd-colors">
-          <div class="pd-colors-label">Цвет<span class="pd-color-name" id="pdColorName">${firstColor}</span></div>
-          <div class="swatches" style="gap:6px;">${sw}</div>
-        </div>`:''}
-
-        <div class="pd-tabs">
-          <button class="pd-tab active" onclick="pdTab(this,'pdSpecs')">Характеристики</button>
-          <button class="pd-tab" onclick="pdTab(this,'pdFeatures')">Особенности</button>
-          <button class="pd-tab" onclick="pdTab(this,'pdDelivery')">Доставка</button>
-        </div>
-
-        <div class="pd-tab-content active" id="pdSpecs">
-          <table class="pd-spec-table">${specs}</table>
-        </div>
-
-        <div class="pd-tab-content" id="pdFeatures">
-          <div class="pd-features">${features}</div>
-          <div class="pd-badges">
-            <span>✓ Оригинал</span>
-            <span>✓ Гарантия 2 года</span>
-            <span>✓ Возврат 14 дней</span>
-            ${p.badge?`<span>🏷 ${p.badge}</span>`:''}
+      <div class="pd-layout">
+        <!-- GALLERY -->
+        <div class="pd-gallery-area">
+          <div class="pd-thumbs-col">${thumbs}</div>
+          <div class="pd-main-img">
+            ${discount?`<div class="pd-badge-sale">-${discount}%</div>`:''}
+            <img src="${images[0]||''}" id="pdImg" alt="${p.name}">
+            <div class="pd-img-counter"><span id="pdImgIdx">1</span> / ${images.length}</div>
           </div>
         </div>
 
-        <div class="pd-tab-content" id="pdDelivery">
-          <table class="pd-spec-table">
-            <tr><td>Алматы</td><td>Завтра (бесплатно от 50 000 тг)</td></tr>
-            <tr><td>Астана</td><td>2 рабочих дня</td></tr>
-            <tr><td>Шымкент</td><td>2 рабочих дня</td></tr>
-            <tr><td>Караганда</td><td>2 рабочих дня</td></tr>
-            <tr><td>Другие города</td><td>3–5 рабочих дней</td></tr>
-            <tr><td>Стоимость</td><td>${p.price>=50000?'Бесплатно':'1 990 тг'}</td></tr>
-          </table>
-        </div>
+        <!-- INFO -->
+        <div class="pd-info">
+          <div class="pd-brand">${p.brand||'Grove'}</div>
+          <h1 class="pd-name">${p.name}</h1>
+          <div class="pd-sku">Артикул: ${p.sku||'GRV-'+p.id}</div>
 
-        <div class="pd-actions">
-          <button class="modal-btn" onclick="addToCart(${p.id});closeCheckout()">+ В корзину</button>
-          <button class="pd-wish-btn" onclick="toggleWish(${p.id});this.textContent=wishlist.includes(${p.id})?'❤️':'🤍'">${isWished?'❤️':'🤍'}</button>
+          <div class="pd-rating">
+            <span class="pd-rating-stars">${'★'.repeat(r)}${'☆'.repeat(5-r)}</span>
+            <span class="pd-rating-count">${rc} отзывов</span>
+          </div>
+
+          <!-- Price block -->
+          <div class="pd-price-block">
+            <div>
+              <span class="pd-price">${Math.round(p.price).toLocaleString()} тг</span>
+              ${p.compare_price?`<span class="pd-price-old">${Math.round(p.compare_price).toLocaleString()} тг</span><span class="pd-price-save">-${discount}%</span>`:''}
+            </div>
+            <div class="pd-monthly">Рассрочка от <em>${getMonthly(p.price)} тг/мес</em> × 12 мес</div>
+          </div>
+
+          <!-- Stock -->
+          <div class="pd-stock-line">
+            <div class="pd-stock-dot"></div>
+            <span class="pd-stock-text">В наличии ${p.stock} шт.</span>
+          </div>
+
+          <!-- Colors -->
+          ${colorOpts?`<div class="pd-section">
+            <div class="pd-section-label">Цвет: <span class="pd-color-name" id="pdColorName">${firstColor}</span></div>
+            <div class="pd-color-options">${colorOpts}</div>
+          </div>`:''}
+
+          <!-- Delivery -->
+          <div class="pd-delivery">
+            <div class="pd-delivery-item"><span class="icon">🚚</span><strong>Завтра</strong>Доставка по Алматы</div>
+            <div class="pd-delivery-item"><span class="icon">📦</span><strong>${p.price>=50000?'Бесплатно':'1 990 тг'}</strong>Доставка по КЗ</div>
+            <div class="pd-delivery-item"><span class="icon">↩️</span><strong>14 дней</strong>Бесплатный возврат</div>
+          </div>
+
+          <!-- Specs -->
+          <div class="pd-specs-section">
+            <div class="pd-specs-title">Характеристики</div>
+            <div class="pd-spec-grid">${specRows}</div>
+            <p style="font-size:.82rem;color:var(--muted);line-height:1.7;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);">${p.description||''}</p>
+          </div>
         </div>
-        <div class="pd-stock">✓ В наличии ${p.stock} шт.</div>
+      </div>
+
+      <!-- Sticky buy bar -->
+      <div class="pd-buy-section">
+        <button class="pd-buy-btn" onclick="addToCart(${p.id});closeCheckout()">Добавить в корзину</button>
+        <button class="pd-buy-btn secondary" onclick="addToCart(${p.id});closeCheckout();openCheckoutForm()">Купить сейчас</button>
+        <button class="pd-icon-btn" onclick="toggleWish(${p.id});this.textContent=wishlist.includes(${p.id})?'❤️':'🤍'" title="Избранное">${isWished?'❤️':'🤍'}</button>
+        <button class="pd-icon-btn" onclick="toggleCompare(${p.id});this.style.background=compareList.some(x=>x.id===${p.id})?'var(--parchment)':'#fff'" title="Сравнить">⚖</button>
       </div>
     </div>
   `;
@@ -2321,12 +2374,14 @@ function pdShowImg(idx){
   thumbs.forEach((t,i)=>{ t.classList.toggle('active',i===idx); imgs.push(t.querySelector('img')?.src); });
   const mainImg = document.getElementById('pdImg');
   if(mainImg && imgs[idx]) mainImg.src = imgs[idx];
+  const counter = document.getElementById('pdImgIdx');
+  if(counter) counter.textContent = idx+1;
 }
-function pdTab(btn, id){
-  document.querySelectorAll('.pd-tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.pd-tab-content').forEach(t=>t.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById(id)?.classList.add('active');
+function pdSelectColor(el, name){
+  document.querySelectorAll('.pd-color-opt').forEach(o=>o.classList.remove('active'));
+  el.classList.add('active');
+  const label = document.getElementById('pdColorName');
+  if(label) label.textContent = name;
 }
 function closeCheckout(){ document.getElementById('checkoutOverlay').classList.remove('open'); document.getElementById('checkoutModal').className='modal modal-lg'; }
 
