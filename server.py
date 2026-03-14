@@ -1490,7 +1490,7 @@ footer{background:var(--dusk);color:rgba(244,240,230,.45);padding:4rem 2rem 2rem
     <div class="search-wrap" style="flex:1;max-width:240px;position:relative;">
       <div class="nav-search">
         <span style="color:var(--muted);font-size:.9rem;">🔍</span>
-        <input type="text" id="searchInput" placeholder="Поиск телефонов…" oninput="onSearch(this.value)" onblur="setTimeout(()=>hideSearch(),200)">
+        <input type="search" id="searchInput" name="grove_search_query" placeholder="Поиск телефонов…" oninput="onSearch(this.value)" onblur="setTimeout(()=>hideSearch(),200)" autocomplete="off" data-form-type="other">
       </div>
       <div class="search-dropdown" id="searchDropdown"></div>
     </div>
