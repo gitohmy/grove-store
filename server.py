@@ -1262,6 +1262,56 @@ footer{background:var(--dusk);color:rgba(244,240,230,.45);padding:4rem 2rem 2rem
 .overlay.open{display:flex;}
 .modal{background:var(--cream);border-radius:24px;padding:2.2rem;width:90%;max-width:420px;position:relative;animation:modalIn .3s cubic-bezier(.34,1.56,.64,1);max-height:90vh;overflow-y:auto;}
 .modal-lg{max-width:520px;}
+.modal-product{max-width:680px;padding:0;overflow:hidden;}
+.pd-grid{display:grid;grid-template-columns:1fr 1fr;min-height:400px;}
+.pd-gallery{background:var(--parchment);padding:1.5rem;display:flex;flex-direction:column;position:relative;}
+.pd-main-img{flex:1;display:flex;align-items:center;justify-content:center;min-height:260px;}
+.pd-main-img img{max-height:260px;max-width:100%;object-fit:contain;filter:drop-shadow(0 8px 20px rgba(0,0,0,.12));transition:opacity .3s;}
+.pd-thumbs{display:flex;gap:.5rem;justify-content:center;margin-top:1rem;}
+.pd-thumb{width:52px;height:52px;border-radius:10px;background:#fff;border:2px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;overflow:hidden;padding:4px;}
+.pd-thumb:hover{border-color:var(--sage);}
+.pd-thumb.active{border-color:var(--fern);box-shadow:0 2px 8px rgba(90,114,71,.2);}
+.pd-thumb img{width:100%;height:100%;object-fit:contain;}
+.pd-info{padding:1.8rem;overflow-y:auto;max-height:80vh;}
+.pd-brand{font-size:.65rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--fern);margin-bottom:.3rem;}
+.pd-name{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;color:var(--moss);margin-bottom:.4rem;}
+.pd-rating{margin-bottom:.6rem;}
+.pd-price{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--moss);}
+.pd-price-old{font-size:.82rem;color:var(--clay);text-decoration:line-through;margin-left:.5rem;font-family:'Jost',sans-serif;font-weight:400;}
+.pd-monthly{font-size:.78rem;color:var(--bark);margin-top:.2rem;font-weight:500;}
+.pd-desc{font-size:.85rem;color:var(--muted);line-height:1.7;margin:1rem 0;padding-bottom:1rem;border-bottom:1px solid var(--border);}
+.pd-colors{margin-bottom:1rem;}
+.pd-colors-label{font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;}
+.pd-color-name{font-size:.75rem;color:var(--text);font-weight:500;margin-left:.5rem;}
+.pd-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin:1rem 0 0;}
+.pd-tab{background:none;border:none;padding:.6rem 1rem;font-family:'Jost',sans-serif;font-size:.78rem;font-weight:500;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;}
+.pd-tab:hover{color:var(--text);}
+.pd-tab.active{color:var(--moss);border-bottom-color:var(--fern);}
+.pd-tab-content{display:none;padding:.8rem 0;}
+.pd-tab-content.active{display:block;}
+.pd-spec-table{width:100%;}
+.pd-spec-table tr{border-bottom:1px solid var(--border);}
+.pd-spec-table tr:last-child{border:none;}
+.pd-spec-table td{padding:.55rem 0;font-size:.82rem;}
+.pd-spec-table td:first-child{color:var(--muted);width:40%;font-size:.75rem;text-transform:uppercase;letter-spacing:.04em;}
+.pd-spec-table td:last-child{font-weight:500;color:var(--text);}
+.pd-features{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.5rem;}
+.pd-feature{display:flex;align-items:center;gap:.5rem;font-size:.78rem;color:var(--text);padding:.4rem .6rem;background:var(--parchment);border-radius:8px;}
+.pd-feature-icon{font-size:1rem;}
+.pd-actions{display:grid;grid-template-columns:1fr auto;gap:.6rem;margin-top:1.2rem;}
+.pd-actions .modal-btn{margin:0;}
+.pd-wish-btn{width:46px;height:46px;border-radius:50%;border:1px solid var(--border);background:#fff;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.pd-wish-btn:hover{border-color:var(--clay);background:var(--parchment);}
+.pd-stock{font-size:.72rem;color:var(--fern);text-align:center;margin-top:.6rem;}
+.pd-badges{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.6rem;}
+.pd-badges span{font-size:.65rem;padding:.2rem .6rem;border-radius:100px;border:1px solid var(--border);color:var(--muted);}
+@media(max-width:680px){
+  .pd-grid{grid-template-columns:1fr;}
+  .pd-gallery{max-height:280px;}
+  .pd-main-img{min-height:180px;}
+  .pd-main-img img{max-height:180px;}
+  .modal-product{max-width:95vw;}
+}
 @keyframes modalIn{from{opacity:0;transform:scale(.92);}to{opacity:1;transform:scale(1);}}
 .modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--muted);line-height:1;z-index:1;}
 .modal h2{font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--moss);margin-bottom:.3rem;}
@@ -1841,7 +1891,7 @@ footer{background:var(--dusk);color:rgba(244,240,230,.45);padding:4rem 2rem 2rem
 
 <!-- CHECKOUT MODAL -->
 <div class="overlay" id="checkoutOverlay" onclick="if(event.target===this)closeCheckout()">
-  <div class="modal modal-lg"><button class="modal-close" onclick="closeCheckout()">✕</button><div id="checkoutContent"></div></div>
+  <div class="modal modal-lg" id="checkoutModal"><button class="modal-close" onclick="closeCheckout()">✕</button><div id="checkoutContent"></div></div>
 </div>
 
 <!-- COMPARE OVERLAY -->
@@ -2169,31 +2219,116 @@ function selectSwatch(e,el){
 // Product detail modal
 function openProductModal(pid){
   const p = allProducts.find(x=>x.id===pid); if(!p) return;
-  const specs = Object.entries(p.specs||{}).map(([k,v])=>`<tr><td style="color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;padding:.5rem .8rem .5rem 0;">${k}</td><td style="font-size:.85rem;font-weight:500;padding:.5rem 0;">${v}</td></tr>`).join('');
-  const sw = (p.colors||[]).map((c,ci)=>`<div class="swatch${ci===0?' active':''}" style="background:${c.hex};width:18px;height:18px;" title="${c.name}" onclick="selectSwatch(event,this)"></div>`).join('');
   const r=4+(p.id%2); const rc=12+(p.id*7)%83;
   const imgUrl = PHONE_IMAGES[p.slug];
-  const detailImg = imgUrl
-    ? `<div style="text-align:center;margin-bottom:1rem;background:var(--parchment);border-radius:16px;padding:1.2rem;"><img src="${imgUrl}" alt="${p.name}" style="max-height:200px;object-fit:contain;filter:drop-shadow(0 4px 12px rgba(0,0,0,.12));"></div>`
-    : '';
+  const backUrl = imgUrl ? imgUrl.replace('.svg','-back.svg') : '';
+  const sideUrl = imgUrl ? imgUrl.replace('.svg','-side.svg') : '';
+  const images = [imgUrl, backUrl, sideUrl].filter(Boolean);
+  const thumbLabels = ['Спереди','Сзади','Сбоку'];
+
+  // Specs table
+  const specs = Object.entries(p.specs||{}).map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join('');
+
+  // Colors
+  const sw = (p.colors||[]).map((c,ci)=>`<div class="swatch${ci===0?' active':''}" style="background:${c.hex};width:20px;height:20px;" title="${c.name}" onclick="selectSwatch(event,this);document.getElementById('pdColorName').textContent='${c.name}'"></div>`).join('');
+  const firstColor = (p.colors||[])[0]?.name || '';
+
+  // Feature badges
+  const featureIcons = {'Дисплей':'📱','Камера':'📸','Чип':'⚡','Батарея':'🔋','Память':'💾','Защита':'🛡','Зарядка':'🔌','5G':'📡','Корпус':'✨','Обновления':'🔄','Форм-фактор':'📐'};
+  const features = Object.entries(p.specs||{}).slice(0,6).map(([k,v])=>`<div class="pd-feature"><span class="pd-feature-icon">${featureIcons[k]||'📋'}</span>${v}</div>`).join('');
+
+  // Thumbnails
+  const thumbs = images.map((img,i)=>`<div class="pd-thumb${i===0?' active':''}" onclick="pdShowImg(${i})" title="${thumbLabels[i]||''}"><img src="${img}"></div>`).join('');
+
+  const isWished = wishlist.includes(p.id);
+
+  const modal = document.getElementById('checkoutModal');
+  modal.className = 'modal modal-product';
+
   document.getElementById('checkoutContent').innerHTML = `
-    ${detailImg}
-    <h2>${p.name}</h2>
-    <div style="margin:.3rem 0 .8rem;"><span class="stars" style="font-size:.9rem;">${'★'.repeat(r)}${'☆'.repeat(5-r)}</span><span class="rating-count">(${rc} отзывов)</span></div>
-    <div style="font-size:1.6rem;font-family:'Playfair Display',serif;font-weight:700;color:var(--moss);">${Math.round(p.price).toLocaleString()} тг <span style="font-size:.9rem;color:var(--muted);font-weight:400;font-family:'Jost',sans-serif;">или ${getMonthly(p.price)} тг/мес</span></div>
-    ${p.compare_price?`<div style="font-size:.8rem;color:var(--clay);text-decoration:line-through;">${Math.round(p.compare_price).toLocaleString()} тг</div>`:''}
-    <p style="font-size:.88rem;color:var(--muted);line-height:1.7;margin:1rem 0;">${p.description||'Флагманский телефон Grove с натуральными материалами.'}</p>
-    ${sw?`<div style="margin:.5rem 0 1rem;"><div style="font-size:.72rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;">Цвет</div><div class="swatches" style="gap:6px;">${sw}</div></div>`:''}
-    <table style="width:100%;margin:1rem 0;">${specs}</table>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:1rem;">
-      <button class="modal-btn" onclick="addToCart(${p.id});closeCheckout()">+ В корзину</button>
-      <button class="modal-btn secondary" onclick="toggleWish(${p.id});closeCheckout()">❤️ Избранное</button>
+    <div class="pd-grid">
+      <div class="pd-gallery">
+        <div class="pd-main-img" id="pdMainImg">
+          <img src="${images[0]||''}" id="pdImg" alt="${p.name}">
+        </div>
+        <div class="pd-thumbs">${thumbs}</div>
+      </div>
+      <div class="pd-info">
+        <div class="pd-brand">${p.brand||'Grove'}</div>
+        <div class="pd-name">${p.name}</div>
+        <div class="pd-rating">
+          <span class="stars" style="font-size:.85rem;">${'★'.repeat(r)}${'☆'.repeat(5-r)}</span>
+          <span class="rating-count">(${rc} отзывов)</span>
+        </div>
+        <div>
+          <span class="pd-price">${Math.round(p.price).toLocaleString()} тг</span>
+          ${p.compare_price?`<span class="pd-price-old">${Math.round(p.compare_price).toLocaleString()} тг</span>`:''}
+        </div>
+        <div class="pd-monthly">от ${getMonthly(p.price)} тг/мес в рассрочку</div>
+        <p class="pd-desc">${p.description||''}</p>
+
+        ${sw?`<div class="pd-colors">
+          <div class="pd-colors-label">Цвет<span class="pd-color-name" id="pdColorName">${firstColor}</span></div>
+          <div class="swatches" style="gap:6px;">${sw}</div>
+        </div>`:''}
+
+        <div class="pd-tabs">
+          <button class="pd-tab active" onclick="pdTab(this,'pdSpecs')">Характеристики</button>
+          <button class="pd-tab" onclick="pdTab(this,'pdFeatures')">Особенности</button>
+          <button class="pd-tab" onclick="pdTab(this,'pdDelivery')">Доставка</button>
+        </div>
+
+        <div class="pd-tab-content active" id="pdSpecs">
+          <table class="pd-spec-table">${specs}</table>
+        </div>
+
+        <div class="pd-tab-content" id="pdFeatures">
+          <div class="pd-features">${features}</div>
+          <div class="pd-badges">
+            <span>✓ Оригинал</span>
+            <span>✓ Гарантия 2 года</span>
+            <span>✓ Возврат 14 дней</span>
+            ${p.badge?`<span>🏷 ${p.badge}</span>`:''}
+          </div>
+        </div>
+
+        <div class="pd-tab-content" id="pdDelivery">
+          <table class="pd-spec-table">
+            <tr><td>Алматы</td><td>Завтра (бесплатно от 50 000 тг)</td></tr>
+            <tr><td>Астана</td><td>2 рабочих дня</td></tr>
+            <tr><td>Шымкент</td><td>2 рабочих дня</td></tr>
+            <tr><td>Караганда</td><td>2 рабочих дня</td></tr>
+            <tr><td>Другие города</td><td>3–5 рабочих дней</td></tr>
+            <tr><td>Стоимость</td><td>${p.price>=50000?'Бесплатно':'1 990 тг'}</td></tr>
+          </table>
+        </div>
+
+        <div class="pd-actions">
+          <button class="modal-btn" onclick="addToCart(${p.id});closeCheckout()">+ В корзину</button>
+          <button class="pd-wish-btn" onclick="toggleWish(${p.id});this.textContent=wishlist.includes(${p.id})?'❤️':'🤍'">${isWished?'❤️':'🤍'}</button>
+        </div>
+        <div class="pd-stock">✓ В наличии ${p.stock} шт.</div>
+      </div>
     </div>
-    <p style="text-align:center;font-size:.72rem;color:var(--muted);margin-top:.8rem;">✓ В наличии ${p.stock} шт. · Гарантия 2 года · Бесплатный возврат 14 дней</p>
   `;
   document.getElementById('checkoutOverlay').classList.add('open');
 }
-function closeCheckout(){ document.getElementById('checkoutOverlay').classList.remove('open'); }
+
+// Gallery helpers
+function pdShowImg(idx){
+  const thumbs = document.querySelectorAll('.pd-thumb');
+  const imgs = [];
+  thumbs.forEach((t,i)=>{ t.classList.toggle('active',i===idx); imgs.push(t.querySelector('img')?.src); });
+  const mainImg = document.getElementById('pdImg');
+  if(mainImg && imgs[idx]) mainImg.src = imgs[idx];
+}
+function pdTab(btn, id){
+  document.querySelectorAll('.pd-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.pd-tab-content').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(id)?.classList.add('active');
+}
+function closeCheckout(){ document.getElementById('checkoutOverlay').classList.remove('open'); document.getElementById('checkoutModal').className='modal modal-lg'; }
 
 // ── Wishlist ─────────────────────────────────────────────────────────────
 function updateWishBadge(){
